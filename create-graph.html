@@ -13,14 +13,6 @@
 <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
 <script type="text/javascript" src="http://www.highcharts.com/samples/data/usdeur.js"></script>
 
-var diffselect = 1;
-
-<script>
-function AskForRange() {
-    diffselect = prompt("Enter range in days", "1");
-}
-</script>
-
 <div id="container" style="height: 400px; min-width: 600px"></div>
 <div id="container2" style="height: 400px; min-width: 600px"></div>
 
@@ -28,8 +20,6 @@ function AskForRange() {
 $.ajaxSetup({ scriptCharset: "utf-8" , contentType: "application/json; charset=utf-8"});
 
 $(document).ready(function (diffselect) {
-
-    AskForRange();
 
     chart = new Highcharts.StockChart({
 	chart:{
@@ -66,7 +56,7 @@ $(document).ready(function (diffselect) {
 
     });
 
-    $.getJSON('data-3.5.php?range='+diffselect, function(data) {
+    $.getJSON('data.php', function(data) {
         RH1 = [[]];
         absAuss = [[]];
         absInn = [[]];
@@ -125,7 +115,7 @@ $(document).ready(function (diffselect) {
 
     });
 
-    $.getJSON('data-3.5.php?range='+diffselect, function(data) {
+    $.getJSON('data.php', function(data) {
         T1 = [[]];
         T2 = [[]];
         T3 = [[]];

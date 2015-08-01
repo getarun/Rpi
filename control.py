@@ -19,7 +19,7 @@ import mysql.connector
 	# setup ROOT-PW to 3e64J%
 ####################################
 DB_NAME = 'klima_growbox'
-DB_TABLE = 'daten2'
+DB_TABLE = 'daten'
 #
 DB_USER = 'pi'
 DB_PASSWD = 'pi'
