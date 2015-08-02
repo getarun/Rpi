@@ -1,2 +1,1 @@
-# unbugging -- reverted changes
-## sync.sh bash script zum remote-sync in git
+branch to implement the remote sync-script on the pi
