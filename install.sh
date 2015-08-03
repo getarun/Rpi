@@ -25,4 +25,4 @@ sudo cp data.php /var/www
 sudo cp create-graph.html /var/www
 sudo cp control.py /usr/bin
 sudo chmod +x /usr/bin/control.py
-sudo chown www-data:www-da /var/www
+sudo chown www-data:www-data /var/www
