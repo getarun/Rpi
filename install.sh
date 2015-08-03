@@ -15,12 +15,12 @@ git clone https://github.com/getarun/Adafruit_Python_DHT.git
 cd Adafruit_Python_DHT
 sudo pyhton setup.py install
 
-cd /home/pi/git-working-dir
+cd /home/pi/git-working-dir/
 git clone https://github.com/getarun/shell-scripte
 cd shell-scripte
 ./install-mysql-connector.sh
 
-cd /home/pi/git-workings-dir/RPi
+cd /home/pi/git-working-dir/RPi
 sudo cp data.php /var/www
 sudo cp create-graph.html /var/www
 sudo cp control.py /usr/bin
