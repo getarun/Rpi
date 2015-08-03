@@ -1,1 +1,10 @@
-#2 testing branch to test new features
+#master branch
+## only tested software
+
+## create feature branch for new implementations as subbranch from testing
+## merge testing branch after successful
+
+
++--------- MASTER ----+------
++---- testing ----+---+
+    +--- feature -+
