@@ -1,8 +1,9 @@
 #!/bin/bash
-# do once
-# git clone git://github.de/getarun/RPi
-cd RPi
+
+
+
+cd /home/pi/RPi
 sudo cp data.php /var/www
 sudo cp create-graph.html /var/www
 sudo cp control.py /usr/bin
-git pull
+sudo chown www-data:www-da /var/www
