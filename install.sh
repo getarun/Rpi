@@ -9,16 +9,13 @@ sudo apt-get install mysql-server build-essential python-dev
  sudo service lighttpd force-reload                            #    http://xx.xx.xx.xx/~pi/*
 ####################################
 #installiert python-libs und Adafruit DHT22 library
-mkdir /home/pi/git-working-dir
-cd /home/pi/git-working-dir
-git clone https://github.com/getarun/Adafruit_Python_DHT.git
-cd Adafruit_Python_DHT
-sudo pyhton setup.py install
 
 cd /home/pi/git-working-dir/
 git clone https://github.com/getarun/shell-scripte
 cd shell-scripte
-./install-mysql-connector.sh
+chmod +x *.sh
+./install-mysql-connector.sh                                #installiert myssql-connector for python
+./install-adafruit-dht22.sh                                 #adafruit dht22 libraries
 
 cd /home/pi/git-working-dir/RPi
 sudo cp data.php /var/www
