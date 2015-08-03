@@ -5,16 +5,16 @@ sudo apt-get install mysql-server build-essential python-dev
 
 ###### HTML-Graph darstellung ######
  sudo apt-get install lighttpd php5-cgi
- sudo lighttpd-mod-enable fastcgi fastcgi-php #userdir      #   enable user dir ~/* to accept requests like 
+ sudo lighttpd-enable-mod fastcgi fastcgi-php userdir      #   enable user dir ~/* to accept requests like 
  sudo service lighttpd force-reload                            #    http://xx.xx.xx.xx/~pi/*
 ####################################
 #installiert python-libs und Adafruit DHT22 library
 
 cd /home/pi/git-working-dir/
-git clone https://github.com/getarun/shell-scripte
-cd shell-scripte
+git clone https://github.com/getarun/shell-scripts
+cd shell-scripts
 chmod +x *.sh
-./install-mysql-connector.sh                                #installiert myssql-connector for python
+./install-mysql-connector-python.sh                                #installiert myssql-connector for python
 ./install-adafruit-dht22.sh                                 #adafruit dht22 libraries
 
 cd /home/pi/git-working-dir/RPi
