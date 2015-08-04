@@ -10,19 +10,21 @@ version = 3.5
 
 test_light = "false"
 test_relais = "false"
+use_db = "true"
 ## checks command line for options "sudo python control.py test_light test_relais will enable test options
 import sys
-if (sys.argv[1] == "test_light"):
-	test_light = "true"
-	if (sys.argv[2] == "test_relais"):
+for arg in sys.argv:
+	if arg == "test_relais":
 		test_relais = "true"
-if (sys.argv[1] == "test_relais"):	
-	test_relais = "true"
-	if (sys.argv[2] == "test_light"):
+	if arg == "test_light":
 		test_light = "true"
+	if arg == "use_db":
+		use_db = "true"
+	if arg == "use_file":
+		use_file = "true"
+
 # Speichert Werte in Datenbank
 import mysql.connector
-use_db = "true"
 create_new_db = "false"
 ####################################
 DB_NAME = 'klima_growbox'
@@ -329,6 +331,13 @@ def insert_into_sql():
 		print("Failed inserting ({},{},{},{},{},{},{},{},{},{},{},{}) into table {}/{}: {}".format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen,DB_NAME,DB_TABLE,err))
 	##########################################################################
 	
+def insert_into_file():
+	if verbose == "1":
+		print(Writing values {},{},{},{},{},{},{},{},{},{},{},{} into file).format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen)
+	try:
+		file = open("data"+str(now)+".list", "w")
+		file.write(timestamp+"\t"date+"\t"t1+"\t"t2+"\t"t3+"\t"rh1+"\t"rh2+"\t"rh3+"\t"tmax+"\t"tmin+"\t"absdraussen+"\t"absdrinnen+"\n")
+	file.close()
 ################### MAIN #########################
 ##Testroutinen
 if test_light == "true":	
