@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 ## Steuerungs Script Domenik Zimmermann
-version = 3.5
 
 # Zuluftsteuerung und Zuteilung der einzelnen Messpunkte
 # Temp/RH1: Schrank
