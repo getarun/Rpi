@@ -200,6 +200,8 @@ def switch_light(status):
 				print('switch_light: Switch off light.')
 		
 def test_light(repeattimes):
+	if verbose == 1:
+		print('test_light: Teste Licht:')
         # schaltet das licht ein (5s) und aus (2s)
 	for i in range(0,repeattimes):
 		switch_light("on")
@@ -208,8 +210,12 @@ def test_light(repeattimes):
 		time.sleep(2)
 
 def test_relais(repeattimes):
+	if verbose == 1:
+		print('test_relais: Teste Relais:')
         # schaltet relais der reihe nach ein (5s) und aus (2s)
 	for i in range(0,repeattimes):
+		if verbose == 1:
+			print('test_relais: Teste Relais...beginnne mit alle aus und schalte FAN[low|mid|high] der Reihe nach (an(2sec)aus) ')
 		switch_of_fan()
 		GPIO.output(fanpinlow, 1)
 		time.sleep(2)
