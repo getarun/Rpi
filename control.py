@@ -333,7 +333,7 @@ def insert_into_sql():
 	
 def insert_into_file():
 	if verbose == "1":
-		print(Writing values {},{},{},{},{},{},{},{},{},{},{},{} into file).format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen)
+		print("riting values {},{},{},{},{},{},{},{},{},{},{},{} into file").format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen)
 	try:
 		file = open("data"+str(now)+".list", "w")
 		file.write(timestamp+"\t"date+"\t"t1+"\t"t2+"\t"t3+"\t"rh1+"\t"rh2+"\t"rh3+"\t"tmax+"\t"tmin+"\t"absdraussen+"\t"absdrinnen+"\n")
