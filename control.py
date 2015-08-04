@@ -7,16 +7,13 @@ version = 3.5-github
 # Temp/RH1: Schrank
 # Temp/RH2: Raum 
 # Temp/RH3: Aussen
+test_light = "false"
+test_relais = "false"
 
 # Speichert Werte in Datenbank
-use_db = "true"
-#wget https://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-2.0.4.tar.gz
-#cd mysql-connector-python-2.0.4/
-#sudo python setup.py install
 import mysql.connector
-
-#sudo apt-get install mysql-server
-	# setup ROOT-PW to 3e64J%
+use_db = "true"
+create_new_db = "false"
 ####################################
 DB_NAME = 'klima_growbox'
 DB_TABLE = 'daten'
@@ -24,23 +21,7 @@ DB_TABLE = 'daten'
 DB_USER = 'pi'
 DB_PASSWD = 'pi'
 DB_HOST = 'localhost'
-create_new_db = "false"
 ####################################
-#mysql -u root -h localhost -p
-#CREATE USER pi@localhost IDENTIFIED BY pi;
-
-
-###### HTML-Graph darstellung ######
-# sudo apt-get install lighttpd php5-cgi
-## sudo lighttpd-mod-enable fastcgi fastcgi-php
-## sudo service lighttpd force-reload
-
-#installiert python-libs und Adafruit DHT22 library
-#sudo apt-get update
-#sudo apt-get install build-essential python-dev
-#git clone https://github.com/adafruit/Adafruit_Python_DHT.git
-#cd Adafruit_Python_DHT
-#sudo pyhton setup.py install
 
 import math				#fuer absolute feuchte rechnung
 import RPi.GPIO as GPIO
@@ -52,7 +33,7 @@ now = datetime.datetime.now()
 
 ###############################################
 #be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
-verbose = 0
+verbose = 1
 
 if verbose != 1:
 	 GPIO.setwarnings(False)
@@ -314,7 +295,6 @@ def create_database_stucture():
 		cursor.execute("DROP DATABASE {}".format(DB_NAME))
 		cursor.execute("CREATE USER 'pi'@'localhost' IDENTIFIED BY 'pi'")
 		cursor.execute("CREATE DATABASE IF NOT EXISTS {} CHARACTER SET=utf8".format(DB_NAME))
-#		cursor.execute("DROP TABLE {}.{}".format(DB_NAME,DB_TABLE))
 		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, date DATETIME, temp1 REAL, temp2 REAL, temp3 REAL, rh1 REAL, rh2 REAL, rh3 REAL, tmax REAL, tmin REAL, absdraussen REAL, absdrinnen REAL) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE))
 		cursor.execute("GRANT ALL PRIVILEGES on {}.{} TO 'pi'@'localhost'".format(DB_NAME,DB_TABLE))
 		cursor.execute("FLUSH PRIVILEGES")
@@ -338,12 +318,17 @@ def insert_into_sql():
 	##########################################################################
 	
 ################### MAIN #########################
-#test_light(1)
-#test_relais(1)
+##Testroutinen
+if test_light == "true":	
+	test_light(1)
+if test_relais == "true":	
+	test_relais(1)
+##
+##########################
 init_sensors()
+
 if create_new_db == "true":	
 	create_database_stucture()
-
 while 1:
 	try:	
 		read_temperatures()
@@ -351,7 +336,6 @@ while 1:
 		intake_relais_control()
 		
 		status_to_console()
-
 		if use_db == "true":
 			insert_into_sql()
 
@@ -359,3 +343,4 @@ while 1:
 		print('captured CRTL+C . . . resetting ports ... exiting')
 		GPIO.cleanup()	
 		break
+#####################################################
