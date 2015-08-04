@@ -1,28 +1,29 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 ## Steuerungs Script Domenik Zimmermann
-version = 3.5
 
 # Zuluftsteuerung und Zuteilung der einzelnen Messpunkte
 # Temp/RH1: Schrank
 # Temp/RH2: Raum 
 # Temp/RH3: Aussen
-
+version = "3.5-github"
 test_light = "false"
 test_relais = "false"
+use_db = "true"
 ## checks command line for options "sudo python control.py test_light test_relais will enable test options
 import sys
-if (sys.argv[1] == "test_light"):
-	test_light = "true"
-	if (sys.argv[2] == "test_relais"):
+for arg in sys.argv:
+	if arg == "test_relais":
 		test_relais = "true"
-if (sys.argv[1] == "test_relais"):	
-	test_relais = "true"
-	if (sys.argv[2] == "test_light"):
+	if arg == "test_light":
 		test_light = "true"
+	if arg == "use_db":
+		use_db = "true"
+	if arg == "use_file":
+		use_file = "true"
+
 # Speichert Werte in Datenbank
 import mysql.connector
-use_db = "true"
 create_new_db = "false"
 ####################################
 DB_NAME = 'klima_growbox'
@@ -153,7 +154,7 @@ def intake_relais_control():
 	else:
 		intakestate = "off"	
 	
-	if fanstate != fanstateold:		# schaltet fan-relais nur wenn noetig
+	if intakestate != intakestateold:		# schaltet fan-relais nur wenn noetig
 		if intakestate == "off":
 			switch_off_intake()		
 	
@@ -199,6 +200,8 @@ def switch_light(status):
 				print('switch_light: Switch off light.')
 		
 def test_light(repeattimes):
+	if verbose == 1:
+		print('test_light: Teste Licht:')
         # schaltet das licht ein (5s) und aus (2s)
 	for i in range(0,repeattimes):
 		switch_light("on")
@@ -207,8 +210,12 @@ def test_light(repeattimes):
 		time.sleep(2)
 
 def test_relais(repeattimes):
+	if verbose == 1:
+		print('test_relais: Teste Relais:')
         # schaltet relais der reihe nach ein (5s) und aus (2s)
 	for i in range(0,repeattimes):
+		if verbose == 1:
+			print('test_relais: Teste Relais...beginnne mit alle aus und schalte FAN[low|mid|high] der Reihe nach (an(2sec)aus) ')
 		switch_of_fan()
 		GPIO.output(fanpinlow, 1)
 		time.sleep(2)
@@ -329,6 +336,12 @@ def insert_into_sql():
 		print("Failed inserting ({},{},{},{},{},{},{},{},{},{},{},{}) into table {}/{}: {}".format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen,DB_NAME,DB_TABLE,err))
 	##########################################################################
 	
+def insert_into_file():
+	if verbose == "1":
+		print("Writing values {},{},{},{},{},{},{},{},{},{},{},{} into file".format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen))
+	file = open("data"+str(now)+".list", "w")
+	file.write(timestamp+"\t"+date+"\t"+t1+"\t"+t2+"\t"+t3+"\t"+rh1+"\t"+rh2+"\t"+rh3+"\t"+tmax+"\t"+tmin+"\t"+absdraussen+"\t"+absdrinnen+"\n")
+	file.close()
 ################### MAIN #########################
 ##Testroutinen
 if test_light == "true":	
