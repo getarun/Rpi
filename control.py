@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 ## Steuerungs Script Domenik Zimmermann
-version = 3.5-github
+version = 3.5
 
 # Zuluftsteuerung und Zuteilung der einzelnen Messpunkte
 # Temp/RH1: Schrank
@@ -48,16 +48,20 @@ fanpinmid = 6
 fanpinhigh = 13				# Relais-Pin der hoechsten Luefter-Spannungsversorgung
 intakepin = 19				# GPIO-Pin des Zuluft-Fan-Relais
 lightpin = 26				# GPIO des Licht-Relais
-rh1pin = 16				    # auch wennGPIO.BOARD gesetzt ist, Pin zwischen 0-31 setzen (DHT22) BOARDpin 32 = BCOMpin 12
-rh2pin = 20				# auch wennGPIO.BOARD gesetzt ist, Pin zwischen 0-31 setzen (DHT22) BOARDpin 32 = BCOMpin 12
-rh3pin = 21				# auch wennGPIO.BOARD gesetzt ist, Pin zwischen 0-31 setzen (DHT22) BOARDpin 32 = BCOMpin 12
+# Temperature Pins
+# RH messung
+rhsensor = Adafruit_DHT.DHT22
+rh1pin = 16				# T1 |	RH1 #
+rh2pin = 20				# T2 |	RH2 # auch wennGPIO.BOARD gesetzt ist, Pin zwischen 0-31 setzen (DHT22) BOARDpin 32 = BCOMpin 12
+rh3pin = 21				# T3 |	RH3 #
 
+#set output pins
 GPIO.setup(fanpinlow, GPIO.OUT)
 GPIO.setup(fanpinmid, GPIO.OUT)
 GPIO.setup(fanpinhigh, GPIO.OUT)
 GPIO.setup(intakepin, GPIO.OUT)
 GPIO.setup(lightpin, GPIO.OUT)
-
+#set input pins
 GPIO.setup(rh1pin, GPIO.IN)
 GPIO.setup(rh2pin, GPIO.IN)
 GPIO.setup(rh3pin, GPIO.IN)
@@ -71,11 +75,9 @@ rhsoll = 50				# RH in percent to maintain
 tmid = (tmax  + tmin) / 2
 ##########################################
 fanstate = "off"		# Zustand der Abluft -- values: {off/low/mid/high}
-fanstateold = "off"		# vorheriger fanstate
-intakestate = "on"		# Zustand der Zuluft -- values: {on/off)
 lightstate = "off"
-# RH messung
-rhsensor = Adafruit_DHT.DHT22
+intakestate = "off"		# Zustand der Zuluft -- values: {on/off)
+
 
 # Vergleich der temperaturen mit Sollwert und wechsel des fan-relais falls noetig
 def lti_relais_control():
@@ -84,7 +86,7 @@ def lti_relais_control():
 		print('fan_control: fanstate is {}'.format(fanstate))
 	fanstateold = fanstate		#save ols fanstate for comparison if one has to switch
 	temp = t1					# regulate on t1 (rh1pin)
-	######################## Entscheidet sich fur eine 
+	######################## Entscheidet sich fur ein LTI-level
 	if temp < tmin:
 		fanstate = "off"
 		if verbose == 1:
