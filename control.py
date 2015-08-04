@@ -7,9 +7,19 @@ version = 3.5
 # Temp/RH1: Schrank
 # Temp/RH2: Raum 
 # Temp/RH3: Aussen
+
 test_light = "false"
 test_relais = "false"
-
+## checks command line for options "sudo python control.py test_light test_relais will enable test options
+import sys
+if (sys.argv[1] == "test_light"):
+	test_light = "true"
+	if (sys.argv[2] == "test_relais"):
+		test_relais = "true"
+if (sys.argv[1] == "test_relais"):	
+	test_relais = "true"
+	if (sys.argv[2] == "test_light"):
+		test_light = "true"
 # Speichert Werte in Datenbank
 import mysql.connector
 use_db = "true"
