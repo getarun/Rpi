@@ -6,10 +6,13 @@
 # Temp/RH1: Schrank
 # Temp/RH2: Raum 
 # Temp/RH3: Aussen
-version = "3.5-github"
-test_light = "false"
-test_relais = "false"
-use_db = "true"
+version     = 	"3.5-github"
+test_light  = 	"false"
+test_relais = 	"false"
+use_db      = 	"false"
+use_file    = 	"true"
+create_new_db = "false"
+
 ## checks command line for options "sudo python control.py test_light test_relais will enable test options
 import sys
 for arg in sys.argv:
@@ -24,7 +27,6 @@ for arg in sys.argv:
 
 # Speichert Werte in Datenbank
 import mysql.connector
-create_new_db = "false"
 ####################################
 DB_NAME = 'klima_growbox'
 DB_TABLE = 'daten'
