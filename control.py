@@ -44,7 +44,7 @@ now = datetime.datetime.now()
 
 ###############################################
 #be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
-verbose = 1
+verbose = 0
 
 if verbose != 1:
 	 GPIO.setwarnings(False)
