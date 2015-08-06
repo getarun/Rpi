@@ -12,7 +12,7 @@ test_relais = 	"false"
 use_db      = 	"false"
 use_file    = 	"true"
 create_new_db = "false"
-
+use_json    =	"true"
 #be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
 verbose = 1
 
@@ -341,8 +341,12 @@ def insert_into_sql():
 def insert_into_file():
 	if verbose == "1":
 		print("Writing values {},{},{},{},{},{},{},{},{},{},{},{} into file".format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen))
-	file = open("data.list", "a")
-	file.write(timestamp+"\t"+date+"\t"+t1+"\t"+t2+"\t"+t3+"\t"+rh1+"\t"+rh2+"\t"+rh3+"\t"+tmax+"\t"+tmin+"\t"+absdraussen+"\t"+absdrinnen+"\n")
+	if use_json == "false":
+		file = open("data.list", "a")
+		file.write(timestamp+"\t"+date+"\t"+t1+"\t"+t2+"\t"+t3+"\t"+rh1+"\t"+rh2+"\t"+rh3+"\t"+tmax+"\t"+tmin+"\t"+absdraussen+"\t"+absdrinnen+"\n")
+	if use_json == "true":
+		file = open("data.json", "a")
+		file.write(json.dumps([timestamp, t1,t2,t3])
 	file.close()
 ################### MAIN #########################
 ##Testroutinen
