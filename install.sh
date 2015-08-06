@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo apt-get install mysql-server build-essential python-dev
+sudo apt-get install mysql-server build-essential python-dev php5-mysql
 #mysql -u root -h localhost -p
 #CREATE USER pi@localhost IDENTIFIED BY pi;
 
