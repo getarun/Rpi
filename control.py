@@ -365,7 +365,8 @@ while 1:
 		status_to_console()
 		if use_db == "true":
 			insert_into_sql()
-
+		if use_file == "true":
+			insert_into_file()
 	except KeyboardInterrupt:
 		print('captured CRTL+C . . . resetting ports ... exiting')
 		GPIO.cleanup()	
