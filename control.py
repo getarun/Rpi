@@ -344,10 +344,11 @@ def insert_into_file():
 	if use_json == "false":
 		file = open("data.list", "a")
 		file.write(timestamp+"\t"+date+"\t"+t1+"\t"+t2+"\t"+t3+"\t"+rh1+"\t"+rh2+"\t"+rh3+"\t"+tmax+"\t"+tmin+"\t"+absdraussen+"\t"+absdrinnen+"\n")
+		file.close()
 	if use_json == "true":
 		file = open("data.json", "a")
 		file.write(json.dumps([timestamp, t1,t2,t3])
-	file.close()
+		file.close()
 ################### MAIN #########################
 ##Testroutinen
 if test_light == "true":	
