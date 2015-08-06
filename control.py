@@ -346,9 +346,9 @@ def insert_into_file():
 		with open("./data.list", "w") as file_list:
 			file_list.write(timestamp+"\t"+date+"\t"+t1+"\t"+t2+"\t"+t3+"\t"+rh1+"\t"+rh2+"\t"+rh3+"\t"+tmax+"\t"+tmin+"\t"+absdraussen+"\t"+absdrinnen+"\n")
 	if use_json == "true":
-		with open("./data.json", "w") as file_json:
+		with open("./data.json", "a") as file_json:
 #			old_data = file_json.read()
-			file_json.write(json.dumps([timestamp, t1,t2,t3,rh1,rh2,rh3.absdraussen,absdrinnen]))
+			file_json.write(json.dumps([timestamp, t1,t2,t3,rh1,rh2,rh3,absdraussen,absdrinnen]))
 ################### MAIN #########################
 ##Testroutinen
 if test_light == "true":	
