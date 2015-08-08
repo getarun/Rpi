@@ -9,7 +9,7 @@
 version     = 	"3.5-github"
 test_light  = 	"false"
 test_relais = 	"false"
-use_db      = 	"false"
+use_db      = 	"true"
 use_file    = 	"true"
 create_new_db = "false"
 import json
@@ -313,8 +313,8 @@ def create_database_stucture():
 	try:
 		cnx = mysql.connector.connect(user='root', password='3e64J%', host='localhost')
 		cursor = cnx.cursor()
-		cursor.execute("DROP USER {}@'localhost'".format(DB_USER))
-		cursor.execute("DROP DATABASE {}".format(DB_NAME))
+#		cursor.execute("DROP USER {}@'localhost'".format(DB_USER))
+#		cursor.execute("DROP DATABASE {}".format(DB_NAME))
 		cursor.execute("CREATE USER 'pi'@'localhost' IDENTIFIED BY 'pi'")
 		cursor.execute("CREATE DATABASE IF NOT EXISTS {} CHARACTER SET=utf8".format(DB_NAME))
 		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, date DATETIME, temp1 REAL, temp2 REAL, temp3 REAL, rh1 REAL, rh2 REAL, rh3 REAL, tmax REAL, tmin REAL, absdraussen REAL, absdrinnen REAL) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE))
