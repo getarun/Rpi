@@ -1,22 +1,36 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 ## Steuerungs Script Domenik Zimmermann
-version = 3.5-github
 
 # Zuluftsteuerung und Zuteilung der einzelnen Messpunkte
 # Temp/RH1: Schrank
 # Temp/RH2: Raum 
 # Temp/RH3: Aussen
+version     = 	"3.5-github"
+test_light  = 	"false"
+test_relais = 	"false"
+use_db      = 	"true"
+use_file    = 	"true"
+create_new_db = "false"
+import json
+use_json    =	"true"
+#be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
+verbose = 1
+
+## checks command line for options "sudo python control.py test_light test_relais will enable test options
+import sys
+for arg in sys.argv:
+	if arg == "test_relais":
+		test_relais = "true"
+	if arg == "test_light":
+		test_light = "true"
+	if arg == "use_db":
+		use_db = "true"
+	if arg == "use_file":
+		use_file = "true"
 
 # Speichert Werte in Datenbank
-use_db = "true"
-#wget https://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-2.0.4.tar.gz
-#cd mysql-connector-python-2.0.4/
-#sudo python setup.py install
 import mysql.connector
-
-#sudo apt-get install mysql-server
-	# setup ROOT-PW to 3e64J%
 ####################################
 DB_NAME = 'klima_growbox'
 DB_TABLE = 'daten'
@@ -24,23 +38,7 @@ DB_TABLE = 'daten'
 DB_USER = 'pi'
 DB_PASSWD = 'pi'
 DB_HOST = 'localhost'
-create_new_db = "false"
 ####################################
-#mysql -u root -h localhost -p
-#CREATE USER pi@localhost IDENTIFIED BY pi;
-
-
-###### HTML-Graph darstellung ######
-# sudo apt-get install lighttpd php5-cgi
-## sudo lighttpd-mod-enable fastcgi fastcgi-php
-## sudo service lighttpd force-reload
-
-#installiert python-libs und Adafruit DHT22 library
-#sudo apt-get update
-#sudo apt-get install build-essential python-dev
-#git clone https://github.com/adafruit/Adafruit_Python_DHT.git
-#cd Adafruit_Python_DHT
-#sudo pyhton setup.py install
 
 import math				#fuer absolute feuchte rechnung
 import RPi.GPIO as GPIO
@@ -51,9 +49,6 @@ import datetime				# Datensicherung in Datei
 now = datetime.datetime.now()
 
 ###############################################
-#be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
-verbose = 0
-
 if verbose != 1:
 	 GPIO.setwarnings(False)
 ###############################################
@@ -67,16 +62,20 @@ fanpinmid = 6
 fanpinhigh = 13				# Relais-Pin der hoechsten Luefter-Spannungsversorgung
 intakepin = 19				# GPIO-Pin des Zuluft-Fan-Relais
 lightpin = 26				# GPIO des Licht-Relais
-rh1pin = 16				    # auch wennGPIO.BOARD gesetzt ist, Pin zwischen 0-31 setzen (DHT22) BOARDpin 32 = BCOMpin 12
-rh2pin = 20				# auch wennGPIO.BOARD gesetzt ist, Pin zwischen 0-31 setzen (DHT22) BOARDpin 32 = BCOMpin 12
-rh3pin = 21				# auch wennGPIO.BOARD gesetzt ist, Pin zwischen 0-31 setzen (DHT22) BOARDpin 32 = BCOMpin 12
+# Temperature Pins
+# RH messung
+rhsensor = Adafruit_DHT.DHT22
+rh1pin = 16				# T1 |	RH1 #
+rh2pin = 20				# T2 |	RH2 # auch wennGPIO.BOARD gesetzt ist, Pin zwischen 0-31 setzen (DHT22) BOARDpin 32 = BCOMpin 12
+rh3pin = 21				# T3 |	RH3 #
 
+#set output pins
 GPIO.setup(fanpinlow, GPIO.OUT)
 GPIO.setup(fanpinmid, GPIO.OUT)
 GPIO.setup(fanpinhigh, GPIO.OUT)
 GPIO.setup(intakepin, GPIO.OUT)
 GPIO.setup(lightpin, GPIO.OUT)
-
+#set input pins
 GPIO.setup(rh1pin, GPIO.IN)
 GPIO.setup(rh2pin, GPIO.IN)
 GPIO.setup(rh3pin, GPIO.IN)
@@ -90,11 +89,9 @@ rhsoll = 50				# RH in percent to maintain
 tmid = (tmax  + tmin) / 2
 ##########################################
 fanstate = "off"		# Zustand der Abluft -- values: {off/low/mid/high}
-fanstateold = "off"		# vorheriger fanstate
-intakestate = "on"		# Zustand der Zuluft -- values: {on/off)
 lightstate = "off"
-# RH messung
-rhsensor = Adafruit_DHT.DHT22
+intakestate = "off"		# Zustand der Zuluft -- values: {on/off)
+
 
 # Vergleich der temperaturen mit Sollwert und wechsel des fan-relais falls noetig
 def lti_relais_control():
@@ -103,7 +100,7 @@ def lti_relais_control():
 		print('fan_control: fanstate is {}'.format(fanstate))
 	fanstateold = fanstate		#save ols fanstate for comparison if one has to switch
 	temp = t1					# regulate on t1 (rh1pin)
-	######################## Entscheidet sich fur eine 
+	######################## Entscheidet sich fur ein LTI-level
 	if temp < tmin:
 		fanstate = "off"
 		if verbose == 1:
@@ -160,7 +157,7 @@ def intake_relais_control():
 	else:
 		intakestate = "off"	
 	
-	if fanstate != fanstateold:		# schaltet fan-relais nur wenn noetig
+	if intakestate != intakestateold:		# schaltet fan-relais nur wenn noetig
 		if intakestate == "off":
 			switch_off_intake()		
 	
@@ -206,6 +203,8 @@ def switch_light(status):
 				print('switch_light: Switch off light.')
 		
 def test_light(repeattimes):
+	if verbose == 1:
+		print('test_light: Teste Licht:')
         # schaltet das licht ein (5s) und aus (2s)
 	for i in range(0,repeattimes):
 		switch_light("on")
@@ -214,8 +213,12 @@ def test_light(repeattimes):
 		time.sleep(2)
 
 def test_relais(repeattimes):
+	if verbose == 1:
+		print('test_relais: Teste Relais:')
         # schaltet relais der reihe nach ein (5s) und aus (2s)
 	for i in range(0,repeattimes):
+		if verbose == 1:
+			print('test_relais: Teste Relais...beginnne mit alle aus und schalte FAN[low|mid|high] der Reihe nach (an(2sec)aus) ')
 		switch_of_fan()
 		GPIO.output(fanpinlow, 1)
 		time.sleep(2)
@@ -310,11 +313,10 @@ def create_database_stucture():
 	try:
 		cnx = mysql.connector.connect(user='root', password='3e64J%', host='localhost')
 		cursor = cnx.cursor()
-		cursor.execute("DROP USER {}@'localhost'".format(DB_USER))
-		cursor.execute("DROP DATABASE {}".format(DB_NAME))
+#		cursor.execute("DROP USER {}@'localhost'".format(DB_USER))
+#		cursor.execute("DROP DATABASE {}".format(DB_NAME))
 		cursor.execute("CREATE USER 'pi'@'localhost' IDENTIFIED BY 'pi'")
 		cursor.execute("CREATE DATABASE IF NOT EXISTS {} CHARACTER SET=utf8".format(DB_NAME))
-#		cursor.execute("DROP TABLE {}.{}".format(DB_NAME,DB_TABLE))
 		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, date DATETIME, temp1 REAL, temp2 REAL, temp3 REAL, rh1 REAL, rh2 REAL, rh3 REAL, tmax REAL, tmin REAL, absdraussen REAL, absdrinnen REAL) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE))
 		cursor.execute("GRANT ALL PRIVILEGES on {}.{} TO 'pi'@'localhost'".format(DB_NAME,DB_TABLE))
 		cursor.execute("FLUSH PRIVILEGES")
@@ -337,13 +339,28 @@ def insert_into_sql():
 		print("Failed inserting ({},{},{},{},{},{},{},{},{},{},{},{}) into table {}/{}: {}".format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen,DB_NAME,DB_TABLE,err))
 	##########################################################################
 	
+def insert_into_file():
+	if verbose == "1":
+		print("Writing values {},{},{},{},{},{},{},{},{},{},{},{} into file".format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen))
+	if use_json == "false":
+		with open("./data.list", "w") as file_list:
+			file_list.write(timestamp+"\t"+date+"\t"+t1+"\t"+t2+"\t"+t3+"\t"+rh1+"\t"+rh2+"\t"+rh3+"\t"+tmax+"\t"+tmin+"\t"+absdraussen+"\t"+absdrinnen+"\n")
+	if use_json == "true":
+		with open("./data.json", "a") as file_json:
+#			old_data = file_json.read()
+			file_json.write(json.dumps([timestamp, t1,t2,t3,rh1,rh2,rh3,absdraussen,absdrinnen]))
 ################### MAIN #########################
-#test_light(1)
-#test_relais(1)
+##Testroutinen
+if test_light == "true":	
+	test_light(1)
+if test_relais == "true":	
+	test_relais(1)
+##
+##########################
 init_sensors()
+
 if create_new_db == "true":	
 	create_database_stucture()
-
 while 1:
 	try:	
 		read_temperatures()
@@ -351,11 +368,13 @@ while 1:
 		intake_relais_control()
 		
 		status_to_console()
-
 		if use_db == "true":
 			insert_into_sql()
+		if use_file == "true":
+			insert_into_file()
 
 	except KeyboardInterrupt:
 		print('captured CRTL+C . . . resetting ports ... exiting')
 		GPIO.cleanup()	
 		break
+#####################################################
