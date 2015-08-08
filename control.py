@@ -3,7 +3,7 @@
 ## Steuerungs Script
 
 # Zuluftsteuerung und Zuteilung der einzelnen Messpunkte
-version     = 	"3.5-github"
+version     = 	"v1.1-dev"
 test_light  = 	"false"
 test_relais = 	"false"
 use_db      = 	"true"
@@ -67,9 +67,9 @@ rhsensor = Adafruit_DHT.DHT22
 #
 name1  = "   AUX   "	#absdraussen
 rh1pin = 16				# T1 |	RH1 # langer Sensor -- Entfeuchter
-name2  = " Schrank "	#absdrinnen
+name2  = " Zuluft "	#absdrinnen
 rh2pin = 20				# T2 |	RH2 # Schrank
-name3  = " Zuluft  "
+name3  = " Schrank  "
 rh3pin = 21				# T3 |	RH3 # Zuluft
 
 #set output pins
@@ -102,7 +102,7 @@ def lti_relais_control():
 	if verbose == 1:
 		print('fan_control: fanstate is {}'.format(fanstate))
 	fanstateold = fanstate		#save ols fanstate for comparison if one has to switch
-	temp = t2			# regulate on t2 (rh2pin)
+	temp = t3			# regulate on t2 (rh2pin)				#######################
 	######################## Entscheidet sich fur ein LTI-level
 	if temp < tmin:
 		fanstate = "off"
@@ -288,15 +288,14 @@ def read_temperatures():
 	if verbose == 1:
 		print('main: Sensor3: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t3,rh3))
 	
-	absdraussen = round(absfeucht(t1,rh1),2)
-	absdrinnen = round(absfeucht(t2,rh2),2)
+	absdraussen = round(absfeucht(t2,rh2),2)						######################
+	absdrinnen = round(absfeucht(t3,rh3),2)							######################
 
 def absfeucht(t,rh):
-        tk=t+273.15 ## Temperatur in Kelvin
-
+# Temperatur in Kelvin
+        tk=t+273.15 
 # sdd Sattigungsdampfdruck bei Temperatur T
         sdd = 6.1078 * 10**((7.5*t)/(237.3+t))
- 
 # Partialdruck des enthaltenen Wassers ist pd=sdd*rh1/100 (Sattigungsdampfdruck*RLF)
         pd=sdd*rh/100
 # Taupunkttemperatur
@@ -306,7 +305,6 @@ def absfeucht(t,rh):
         if verbose == 1:
                 print ('T={},RH={} ==> Absolute Feuchte {} [g/m^3]').format(t,rh,af)
         return af
-
 
 def init_sensors():
 	print('    Initialisiere Messpunkte (DHT22 1-3) mit Adafruit-Library...')
