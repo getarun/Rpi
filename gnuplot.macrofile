@@ -1,0 +1,16 @@
+## #!/bin/bash
+# -*- coding: utf-8 -*-
+# creates a graph using the file created by control.py use_file 
+
+set xdata time
+set timefmt "%m/%d"
+#set xrange ["03/21/95":"03/22/95"]
+set format x "%m/%d"
+set timefmt "%m/%d/%y %H:%M"
+
+set terminal svg size 350,300  # fname 'Verdana' fsize 10
+set out 'data.svg'
+
+plot "data" using 1:3 title 'T1', \
+     "data" u 1:4 t'T2', \
+     "data" u 1:5 t'T3'
