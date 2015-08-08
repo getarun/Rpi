@@ -40,15 +40,15 @@ $(document).ready(function (diffselect) {
 		   '#492970', '#f28f43', '#77a1e5', '#c42525', '#a6c96a'],
 
         series: [{
-            name: 'RH1', data: []
+            name: 'RH::AUX::', data: []
             },{
-            name: 'absAuss',
+            name: 'abs - Aux',
             data: [], yAxis: 1, floor: 12, ceiling: 15
             },{
-            name: 'absInn',
+            name: 'abs - Schrank',
             data: [], yAxis: 1, floor: 12, ceiling: 15
             },{
-            name: 'absCal',
+            name: 'ABS: AUX/Schrank',
             data: [], yAxis: 2, floor: 0.95, ceiling: 1.05
 	    }
 
@@ -58,18 +58,18 @@ $(document).ready(function (diffselect) {
 
     $.getJSON('data.php', function(data) {
         RH1 = [[]];
-        absAuss = [[]];
-        absInn = [[]];
+        absAux = [[]];
+        absSchrank = [[]];
         absCal = [[]];
         for(i=0;i<data.length;i++){
             RH1[i]=([data[i][0],data[i][4]]);
-            absAuss[i]=([data[i][0],data[i][9]]);
-            absInn[i]=([data[i][0],data[i][10]]);
+            absAux[i]=([data[i][0],data[i][9]]);		/*absdraussen*/
+            absSchrank[i]=([data[i][0],data[i][10]]);		/*absdrinnen */
 	    absCal[i]=([data[i][0],data[1][9]/data[i][10]]);
         };
         chart.series[0].setData(RH1);
-        chart.series[1].setData(absAuss);
-        chart.series[2].setData(absInn);
+        chart.series[1].setData(absAux);
+        chart.series[2].setData(absSchrank);
         chart.series[3].setData(absCal);
         new Highcharts.StockChart(options);
     });
@@ -90,15 +90,15 @@ $(document).ready(function (diffselect) {
 	],
 
         series: [{
-            name: 'T1',
+            name: 'AUX',
             data: [], dashtype: 'dot'
             },
 	      {
-            name: 'T2',
+            name: 'Schrank',
             data: []
             },
 	    {
-            name: 'T3',
+            name: 'Zuluft',
             data: []
             },{
             name: 'Tmax',
