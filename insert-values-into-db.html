@@ -1,0 +1,15 @@
+#this is used to input the amount of water given, its PH and EC values
+#saves it in db of type   |timestamp|NR|amount|PH|EC|
+
+<form action="insert.php" method="post">
+	<input type="text" name="plantnumber" /><input type="text" name="ml" />
+	<input type="text" name="PH" />
+	<input type="text" name="EC" />
+	<input type="submit" value="Save to DB" />
+</form>
+
+insert.php
+
+strSQL = "INSERT INTO klima_growbox.giessen values('" . $_POST["FirstName"] . "')"
+
+
