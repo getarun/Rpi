@@ -7,9 +7,9 @@ version     = 	"v1.1-dev"
 test_light  = 	"false"
 test_relais = 	"false"
 use_db      = 	"true"
-use_file    = 	"true"
-create_new_db = "false"
-use_json    =	"true"
+use_file    = 	"false"
+create_new_db = "true"
+use_json    =	"false"
 import json
 #be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
 verbose = 0
@@ -238,6 +238,9 @@ def test_relais(repeattimes):
 
 		
 def status_to_console():
+	if clear_konsole_after_cycle == 1:
+		#time.sleep(5)
+		os.system('clear')
 	if verbose == 1:
 		print('This is Version {}'.format(version))
 	print '******Temp/Humidity Test******'
@@ -247,10 +250,10 @@ def status_to_console():
 	print 'Air Temp Lower: {}'.format(tmin)
 	print ''
 	print 'Light is: {}'.format(lightstate)
-	print'RH1/T1:: {} ::   {}% | {}*C'.format(name1,rh1,t1)
-	print'RH2/T2:: {} ::   {}% | {}*C'.format(name2,rh2,t2)
-	print'RH3/T3:: {} ::   {}% | {}*C'.format(name3,rh3,t3)
-	print'[g/m³] (AUX/Schrank) :: {} | {}'.format(absdraussen,absdrinnen)
+	print'RH1/T1:: {}   ::   {}% | {}*C'.format(name1,rh1,t1)
+	print'RH2/T2:: {}    ::   {}% | {}*C'.format(name2,rh2,t2)
+	print'RH3/T3:: {}  ::   {}% | {}*C'.format(name3,rh3,t3)
+	print'[g/m³] (AUX/Schrank) ::   {} | {}'.format(absdraussen,absdrinnen)
 	print ''
 	print('Fan-level: {}'.format(fanstate))
 	print('Intake-level: {}'.format(intakestate))
@@ -260,9 +263,6 @@ def status_to_console():
 		print('now.isoformat():                         {}'.format(now.isoformat()))
 		print '######################### End of Cycle #########################'
 	print ''
-	if clear_konsole_after_cycle == 1:
-		#time.sleep(5)
-		os.system('clear')
 
 
 def read_temperatures():
@@ -323,10 +323,10 @@ def create_database_stucture():
 		cursor = cnx.cursor()
 #		cursor.execute("DROP USER {}@'localhost'".format(DB_USER))
 #		cursor.execute("DROP DATABASE {}".format(DB_NAME))
-		cursor.execute("CREATE USER 'pi'@'localhost' IDENTIFIED BY 'pi'")
+#		cursor.execute("CREATE USER 'pi'@'localhost' IDENTIFIED BY 'pi'")
 		cursor.execute("CREATE DATABASE IF NOT EXISTS {} CHARACTER SET=utf8".format(DB_NAME))
 		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, date DATETIME, temp1 REAL, temp2 REAL, temp3 REAL, rh1 REAL, rh2 REAL, rh3 REAL, tmax REAL, tmin REAL, absdraussen REAL, absdrinnen REAL) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE))
-		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, plantnumer INT, amount INT, PH INT, EC INT) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE2))
+		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, plantnumer INT, amount INT, PH REAL, EC REAL) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE2))
 		cursor.execute("GRANT ALL PRIVILEGES on {}.{} TO 'pi'@'localhost'".format(DB_NAME,DB_TABLE))
 		cursor.execute("GRANT ALL PRIVILEGES on {}.{} TO 'pi'@'localhost'".format(DB_NAME,DB_TABLE2))
 		cursor.execute("FLUSH PRIVILEGES")
