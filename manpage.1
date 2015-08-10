@@ -23,12 +23,15 @@ control operation of the script just by giving appropriate command line options.
 Activates writing into sql database difined in control.py - Usually it's klima_growbox.daten.
 
 .TP
-.BR use_file[="false"]
+.BR use_file[="true"]
 Writes values into file data.list as a bunch of values (untested)
 
 .TP 
 .BR use_json[="true"]
 Writes a json-formatted file calles data.json into some file if use_file="true".
+
+.TP create_new_db[="false"]
+creates a new database structur. Run this on first start to create mysql-framework.
 
 .TP 
 .BR test_light[="false"]
