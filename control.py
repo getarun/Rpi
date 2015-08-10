@@ -32,13 +32,13 @@ for arg in sys.argv:
 # Speichert Werte in Datenbank
 import mysql.connector
 ####################################
-DB_NAME = 'klima_growbox'
-DB_TABLE = 'daten'
-DB_TABLE = 'giessen'
+DB_NAME 	= 'klima_growbox'
+DB_TABLE 	= 'daten'
+DB_TABLE2 	= 'giessen'
 #
-DB_USER = 'pi'
-DB_PASSWD = 'pi'
-DB_HOST = 'localhost'
+DB_USER 	= 'pi'
+DB_PASSWD 	= 'pi'
+DB_HOST 	= 'localhost'
 ####################################
 
 import math				#fuer absolute feuchte rechnung
