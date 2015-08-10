@@ -1,15 +1,31 @@
 #this is used to input the amount of water given, its PH and EC values
 #saves it in db of type   |timestamp|NR|amount|PH|EC|
-
+<center> <b>Enter your amount of watering: </b> </center>  \n
 <form action="insert.php" method="post">
-	<input type="text" name="plantnumber" /><input type="text" name="ml" />
-	<input type="text" name="PH" />
-	<input type="text" name="EC" />
+	<input type="number" name="plantnumber" />
+	<input type="number" name="amount" />
+	<input type="number" name="PH" />
+	<input type="number" name="EC" />
 	<input type="submit" value="Save to DB" />
 </form>
 
 insert.php
+<?php
+/* */
+$plantnumber 	= $_POST["plantnumber"];
+$amount      	= $_POST["amount"];
+$PH		= $_POST["PH"];
+$EC		= $_POST["EC"];
 
-strSQL = "INSERT INTO klima_growbox.giessen values('" . $_POST["FirstName"] . "')"
+/* */
+  $timestamp = time()*1000+7200	;
+  $dbc 		= mysqli_connect("localhost", "pi", "pi", "klima_growbox");
+  $query 	= "INSERT INTO giessen (timestamp,plantnumber,PH,EC) values($timestamp, . $_POST["plantnumber"] ., . $_POST["amount"] ., . $_POST["PH"] ., '" . $_POST["EC"] . "')";
+  $insert	= mysqli_query($dbc, $query);
+  if (mysqli_affected_rows($insert) > 0) {echo "row inserted"};
+?>
+
+
+
 
 
