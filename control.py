@@ -1,21 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
-## Steuerungs Script Domenik Zimmermann
+## Steuerungs Script
 
 # Zuluftsteuerung und Zuteilung der einzelnen Messpunkte
-# Temp/RH1: Schrank
-# Temp/RH2: Raum 
-# Temp/RH3: Aussen
 version     = 	"3.5-github"
 test_light  = 	"false"
 test_relais = 	"false"
 use_db      = 	"true"
 use_file    = 	"true"
 create_new_db = "false"
-import json
 use_json    =	"true"
+import json
 #be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
 verbose = 1
+clear_konsole_after_cycle = 1
 
 ## checks command line for options "sudo python control.py test_light test_relais will enable test options
 import sys
@@ -62,12 +60,17 @@ fanpinmid = 6
 fanpinhigh = 13				# Relais-Pin der hoechsten Luefter-Spannungsversorgung
 intakepin = 19				# GPIO-Pin des Zuluft-Fan-Relais
 lightpin = 26				# GPIO des Licht-Relais
-# Temperature Pins
-# RH messung
+
+############# Messungspins ############
+# auch wennGPIO.BOARD gesetzt ist, Pin zwischen 0-31 setzen (DHT22) BOARDpin 32 = BCOMpin 12
 rhsensor = Adafruit_DHT.DHT22
-rh1pin = 16				# T1 |	RH1 #
-rh2pin = 20				# T2 |	RH2 # auch wennGPIO.BOARD gesetzt ist, Pin zwischen 0-31 setzen (DHT22) BOARDpin 32 = BCOMpin 12
-rh3pin = 21				# T3 |	RH3 #
+#
+name1  = "   AUX   "	#absdraussen
+rh1pin = 16				# T1 |	RH1 # langer Sensor -- Entfeuchter
+name2  = " Schrank "	#absdrinnen
+rh2pin = 20				# T2 |	RH2 # Schrank
+name3  = " Zuluft  "
+rh3pin = 21				# T3 |	RH3 # Zuluft
 
 #set output pins
 GPIO.setup(fanpinlow, GPIO.OUT)
@@ -99,7 +102,7 @@ def lti_relais_control():
 	if verbose == 1:
 		print('fan_control: fanstate is {}'.format(fanstate))
 	fanstateold = fanstate		#save ols fanstate for comparison if one has to switch
-	temp = t1					# regulate on t1 (rh1pin)
+	temp = t2			# regulate on t2 (rh2pin)
 	######################## Entscheidet sich fur ein LTI-level
 	if temp < tmin:
 		fanstate = "off"
@@ -232,8 +235,6 @@ def test_relais(repeattimes):
 
 		
 def status_to_console():
-	if verbose == 0:
-		os.system('clear')
 	if verbose == 1:
 		print('This is Version {}'.format(version))
 	print '******Temp/Humidity Test******'
@@ -243,17 +244,23 @@ def status_to_console():
 	print 'Air Temp Lower: {}'.format(tmin)
 	print ''
 	print 'Light is: {}'.format(lightstate)
-	print'Current RH1/T1: {}%/{}*C'.format(rh1,t1)
-	print'Current RH2/T2: {}%/{}*C'.format(rh2,t2)
-	print'Current RH3/T3: {}%/{}*C'.format(rh3,t3)
-	print'[g/m³] (draußen / drinnen) {}/{}'.format(absdraussen,absdrinnen)
+	print'RH1/T1:: {} ::   {}% | {}*C'.format(name1,rh1,t1)
+	print'RH2/T2:: {} ::   {}% | {}*C'.format(name2,rh2,t2)
+	print'RH3/T3:: {} ::   {}% | {}*C'.format(name3,rh3,t3)
+	print'[g/m³] (AUX/Schrank) :: {} | {}'.format(absdraussen,absdrinnen)
+	print ''
 	print('Fan-level: {}'.format(fanstate))
 	print('Intake-level: {}'.format(intakestate))
 	if verbose == 1:
+		print ''
 		print ('Datenbanktimestamp: {} ist {}'.format(timestamp,datetime.datetime.fromtimestamp(timestamp/1000.0)))
-		print('now.isoformat(): {}'.format(now.isoformat()))
+		print('now.isoformat():                         {}'.format(now.isoformat()))
 		print '######################### End of Cycle #########################'
 	print ''
+	if clear_konsole_after_cycle == 1:
+		time.sleep(5)
+		os.system('clear')
+
 
 def read_temperatures():
 # Schreibt alle Variablen fuer die anderen Funktionen
@@ -281,8 +288,8 @@ def read_temperatures():
 	if verbose == 1:
 		print('main: Sensor3: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t3,rh3))
 	
-	absdraussen = round(absfeucht(t1,rh1),3)
-	absdrinnen = round(absfeucht(t2,rh2),3)
+	absdraussen = round(absfeucht(t1,rh1),2)
+	absdrinnen = round(absfeucht(t2,rh2),2)
 
 def absfeucht(t,rh):
         tk=t+273.15 ## Temperatur in Kelvin
