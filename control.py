@@ -34,6 +34,7 @@ import mysql.connector
 ####################################
 DB_NAME = 'klima_growbox'
 DB_TABLE = 'daten'
+DB_TABLE = 'giessen'
 #
 DB_USER = 'pi'
 DB_PASSWD = 'pi'
@@ -325,7 +326,9 @@ def create_database_stucture():
 		cursor.execute("CREATE USER 'pi'@'localhost' IDENTIFIED BY 'pi'")
 		cursor.execute("CREATE DATABASE IF NOT EXISTS {} CHARACTER SET=utf8".format(DB_NAME))
 		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, date DATETIME, temp1 REAL, temp2 REAL, temp3 REAL, rh1 REAL, rh2 REAL, rh3 REAL, tmax REAL, tmin REAL, absdraussen REAL, absdrinnen REAL) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE))
+		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, plantnumer INT, amount INT, PH INT, EC INT) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE2))
 		cursor.execute("GRANT ALL PRIVILEGES on {}.{} TO 'pi'@'localhost'".format(DB_NAME,DB_TABLE))
+		cursor.execute("GRANT ALL PRIVILEGES on {}.{} TO 'pi'@'localhost'".format(DB_NAME,DB_TABLE2))
 		cursor.execute("FLUSH PRIVILEGES")
 	except mysql.connector.Error as err:
 		print(err)
