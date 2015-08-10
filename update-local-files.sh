@@ -10,4 +10,7 @@ sudo chmod +x /usr/bin/control.py
 
 sudo chown www-data:www-data /var/www
 
-sudo cp manpage.man /usr/share/man/control.1
+###installs manpage
+echo "installing man-page"
+gzip manpage.1
+sudo cp manpage.1.gz /usr/share/man/
