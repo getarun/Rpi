@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<title>v1.1-dev</title>
+</head>
+/* this is used to input the amount of water given, its PH and EC values*/
+/* saves it in db of type   |timestamp|NR|amount|PH|EC|*/
+<body>
+<center> <b>Enter your amount of watering: </b> </center>  \n
+<form action="insert.php" method="post">
+	<input type="number" name="plantnumber" />
+	<input type="number" name="amount" />
+	<input type="number" name="PH" />
+	<input type="number" name="EC" />
+	<input type="submit" value="Save to DB" />
+</form>
+<center> <b><a href="http://localhost/create-graph.html" target="_blank">Show graph on last days:</a> </b> </center>  \n
+</body>
+</html>
