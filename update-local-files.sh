@@ -14,6 +14,10 @@ echo "Setting execution bit to /usr/bin/control.py"
 sudo chmod +x /usr/bin/control.py
 
 ###installs manpage
-echo "Installing man-page"
-gzip manpage.1
-sudo cp manpage.1.gz /usr/share/man/
+echo "Installing man-page to /usr/local/share/man/man1"
+install -g 0 -o 0 -m 0644 manpage.1 /usr/local/share/man/man1/control.py.1
+gzip /usr/local/shre/man/man1/control.py.1
+
+#gzip manpage.1
+#sudo cp manpage.1.gz /usr/local/share/man/
+#sudo chmod 0644 /usr/local/share/man/control.1.gz
