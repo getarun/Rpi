@@ -9,3 +9,5 @@ sudo cp about.php /var/www
 sudo chmod +x /usr/bin/control.py
 
 sudo chown www-data:www-data /var/www
+
+sudo cp manpage.man /usr/share/man/control.1
