@@ -8,7 +8,7 @@ test_light  = 	"false"
 test_relais = 	"false"
 use_db      = 	"true"
 use_file    = 	"false"
-create_new_db = "true"
+create_new_db = "false"
 use_json    =	"false"
 import json
 #be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
@@ -326,7 +326,7 @@ def create_database_stucture():
 #		cursor.execute("CREATE USER 'pi'@'localhost' IDENTIFIED BY 'pi'")
 		cursor.execute("CREATE DATABASE IF NOT EXISTS {} CHARACTER SET=utf8".format(DB_NAME))
 		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, date DATETIME, temp1 REAL, temp2 REAL, temp3 REAL, rh1 REAL, rh2 REAL, rh3 REAL, tmax REAL, tmin REAL, absdraussen REAL, absdrinnen REAL) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE))
-		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, plantnumer INT, amount INT, PH REAL, EC REAL) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE2))
+		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, plantnumber INT, amount INT, PH REAL, EC REAL) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE2))
 		cursor.execute("GRANT ALL PRIVILEGES on {}.{} TO 'pi'@'localhost'".format(DB_NAME,DB_TABLE))
 		cursor.execute("GRANT ALL PRIVILEGES on {}.{} TO 'pi'@'localhost'".format(DB_NAME,DB_TABLE2))
 		cursor.execute("FLUSH PRIVILEGES")
@@ -356,7 +356,7 @@ def insert_into_file():
 		with open("./data.list", "a") as file_list:
 			file_list.write(timestamp+"\t"+date+"\t"+t1+"\t"+t2+"\t"+t3+"\t"+rh1+"\t"+rh2+"\t"+rh3+"\t"+tmax+"\t"+tmin+"\t"+absdraussen+"\t"+absdrinnen+"\n")
 	if use_json == "true":
-		print 'removed because not tested'
+		print 'JSON-insert-into-file: removed because not tested'
 		#with open("./data.json", "a") as file_json:
 		#	old_data = file_json.read()
 		#	data = old_data
