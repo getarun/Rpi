@@ -26,6 +26,8 @@ for arg in sys.argv:
 		use_db = "true"
 	if arg == "use_file":
 		use_file = "true"
+	if arg == "use_json":
+		use_json = "true"
 
 # Speichert Werte in Datenbank
 import mysql.connector
