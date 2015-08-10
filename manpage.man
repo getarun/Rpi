@@ -1,4 +1,4 @@
-.TH control.py 1
+.TH control.py 1 "Version 1.1 - v1.1 on github RePo"
 
 .SH NAME
 control.py v1.1 \- Tracks ambient variables on three DHT22. Writes values to files, MYSQL if desired. Includes test routines.
