@@ -71,9 +71,9 @@ rhsensor = Adafruit_DHT.DHT22
 name1  = "   AUX   "	#absdraussen
 rh1pin = 16				# T1 |	RH1 # langer Sensor -- Entfeuchter
 name2  = " Zuluft "	#absdrinnen
-rh2pin = 20				# T2 |	RH2 # Schrank
+rh2pin = 20				# T2 |	RH2 # Zuluft
 name3  = " Schrank  "
-rh3pin = 21				# T3 |	RH3 # Zuluft
+rh3pin = 21				# T3 |	RH3 # Schrank
 
 #set output pins
 GPIO.setup(fanpinlow, GPIO.OUT)
@@ -364,9 +364,9 @@ def insert_into_file():
 ################### MAIN #########################
 ##Testroutinen
 if test_light == "true":	
-	test_light(1)
+	test_light(2)
 if test_relais == "true":	
-	test_relais(1)
+	test_relais(2)
 ##
 ##########################
 init_sensors()
