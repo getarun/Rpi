@@ -261,7 +261,7 @@ def status_to_console():
 		print '######################### End of Cycle #########################'
 	print ''
 	if clear_konsole_after_cycle == 1:
-		time.sleep(5)
+		#time.sleep(5)
 		os.system('clear')
 
 
