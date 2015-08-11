@@ -10,6 +10,19 @@
 # bits.
 #
 # By default this script does nothing.
-curlftpfs ftp.lima-city.de /home/domenik/limacity-ftp/ &
-python /usr/bin/control.py &> /dev/null &
+python /usr/bin/control.py > /dev/null &
 exit 0
+
+#  $ crontab -e
+#  no crontab for pi - using an empty one
+#  
+#  Select an editor.  To change later, run 'select-editor'.
+#  1. /bin/ed
+#  2. /bin/nano        <---- easiest
+#  3. /usr/bin/vim.tiny
+#  
+#  Choose 1-3 [2]: 2
+#  crontab: installing new crontab
+#  $ crontab -l
+#  # m h  dom mon dow   command
+#  @reboot /home/pi/script_to_run_on_reboot
