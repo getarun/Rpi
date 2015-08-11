@@ -12,6 +12,7 @@
 # By default this script does nothing.
 python /usr/bin/control.py > /dev/null &
 exit 0
+############################################################################
 
 #  $ crontab -e
 #  no crontab for pi - using an empty one
