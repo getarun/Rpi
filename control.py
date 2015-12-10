@@ -320,7 +320,7 @@ def read_DS18B20(id):
   value = 0
   path="/sys/bus/w1/devices/"+id+"/w1_slave"
   if verbose == 1:
-  	print ('Sensor---Path{}').format(id)
+  	print ('Sensor---Path{}').format(path)
   try:
     f = open(path, "r")
     line = f.readline()
@@ -328,7 +328,7 @@ def read_DS18B20(id):
       line = f.readline()
       m = re.match(r"([0-9a-f]{2} ){9}t=([+-]?[0-9]+)", line)
       if m:
-        value = float(m.group(2) / 1000.0)
+        value = str(float(m.group(2) / 1000.0))
     f.close()
   except (IOError), e:
     print time.strftime("%x %X"), "Error reading", path, ": ", e
