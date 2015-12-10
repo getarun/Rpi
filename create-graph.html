@@ -29,9 +29,9 @@ $(document).ready(function (diffselect) {
 	    animation: false
 	},
 	yAxis:[{
-	      title: {text: 'Humidity'}, opposite: false, floor: 60
+	      title: {text: 'Humidity'}, opposite: false
 	      },{
-	      title: {text:'Temperature'}, ceiling: 40, floor: 10
+	      title: {text:'Temperature'}
 	      }
 	],
 
@@ -39,15 +39,15 @@ $(document).ready(function (diffselect) {
 		   '#492970', '#f28f43', '#77a1e5', '#c42525', '#a6c96a'],
 
         series: [{
-            name: 'T1', data: []
+            name: 'T1', data: [], axis: 1
             },{
             name: 'RH1', data: []
             },{
             name: 'TMax',
-            data: [], dashtype: 'dot'
+            data: [], dashtype: 'dot', axis: 1
             },{
             name: 'Tmin',
-            data: [], dashtype: 'dot'
+            data: [], dashtype: 'dot', axis: 1
             }
 
 	]
@@ -92,7 +92,7 @@ $(document).ready(function (diffselect) {
             data: [], dashtype: 'dot'
             },{
             name: 'RH2',
-            data: []
+            data: [], axis: 1
             },{
             name: 'TMax',
             data: [], dashtype: 'dot'
@@ -149,13 +149,13 @@ $(document).ready(function (diffselect) {
             data: [], dashtype: 'dot'
             },{
             name: 'abs - Aux',
-            data: [], yAxis: 2, floor: 12, ceiling: 15
+            data: [], yAxis: 2
             },{
             name: 'abs - Schrank',
-            data: [], yAxis: 2, floor: 12, ceiling: 15
+            data: [], yAxis: 2
             },{
             name: 'Cal: AUX/Schrank',
-            data: [], yAxis: 1, floor: 0.95, ceiling: 1.05
+            data: [], yAxis: 1
 	    }
 
 	]
