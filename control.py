@@ -317,22 +317,20 @@ def absfeucht(t,rh):
         return af
 
 def read_DS18B20(id):
-  value = "0"
+  value = "0(
   path="/sys/bus/w1/devices/"+id+"/w1_slave"
   if verbose == 1:
   	print ('Sensor---Path{}').format(path)
   try:
-    f = open(path, "r")
-    line = f.readline()
-    if re.match(r"([0-9a-f]{2} ){9}: crc=[0-9a-f]{2} YES", line):
-      line = f.readline()
-      m = re.match(r"([0-9a-f]{2} ){9}t=([+-]?[0-9]+)", line)
-      if m:
-        value = str(float(m.group(2) / 1000.0))
-    f.close()
+    sensorfile = open(path, "r")
+    outputtext = sensorfile.read()
+    sensorfile.close()
+    tempdata = outputtext.split("\n")[1].split(" ")[9]
+    temperature = float(tempdata[2:])
+    temperature = temperature / 1000
   except (IOError), e:
     print time.strftime("%x %X"), "Error reading", path, ": ", e
-  return float(value)
+  return temperature
 
 def init_sensors():
 	print('    Initialisiere Messpunkte (DHT22 1-3) mit Adafruit-Library...')
