@@ -1,3 +1,4 @@
+
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 ## Steuerungs Script
@@ -72,7 +73,7 @@ rh2pin = 20				# T2 |	RH2 # Schrank
 name3  = " Zuluft  "
 rh3pin = 21				# T3 |	RH3 # Zuluft
 name4 = "Wassertemp"
-#Pin 1-wire (GPIO5 geänert in /boot/config.txt
+#Pin 1-wire (GPIO5 geaenert in /boot/config.txt
 
 
 #set output pins
@@ -251,7 +252,7 @@ def status_to_console():
 	print'RH2/T2:: {} ::   {}% | {}*C'.format(name2,rh2,t2)
 	print'RH3/T3:: {} ::   {}% | {}*C'.format(name3,rh3,t3)
 	print'DS18B :: {} ::   {}*C'.format(name4,t4)
-	print'[g/m³] (AUX/Schrank) :: {} | {}'.format(absdraussen,absdrinnen)
+	print'[g/cmeter] (AUX/Schrank) :: {} | {}'.format(absdraussen,absdrinnen)
 	print ''
 	print('Fan-level: {}'.format(fanstate))
 	print('Intake-level: {}'.format(intakestate))
