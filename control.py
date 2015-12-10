@@ -56,7 +56,7 @@ GPIO.setmode(GPIO.BCM)		#GPIO-numbering
 #GPIO.setmode(GPIO.BOARD)	#Pin-numbering 1-40
 
 # Relais-Pins
-fanpinlow = 5				# Relais-Pin der kleinsten Luefter-Spannungsversorgung
+fanpinlow = 12				# Relais-Pin der kleinsten Luefter-Spannungsversorgung
 fanpinmid = 6
 fanpinhigh = 13				# Relais-Pin der hoechsten Luefter-Spannungsversorgung
 intakepin = 19				# GPIO-Pin des Zuluft-Fan-Relais
