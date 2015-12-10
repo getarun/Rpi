@@ -317,7 +317,6 @@ def absfeucht(t,rh):
         return af
 
 def read_DS18B20(id):
-  value = "0(
   path="/sys/bus/w1/devices/"+id+"/w1_slave"
   if verbose == 1:
   	print ('Sensor---Path{}').format(path)
