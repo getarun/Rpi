@@ -3,7 +3,7 @@
 ## Steuerungs Script
 
 # Zuluftsteuerung und Zuteilung der einzelnen Messpunkte
-version     = 	"3.5-github"
+version     = 	"update to rpi 4.1.1"
 test_light  = 	"false"
 test_relais = 	"false"
 use_db      = 	"true"
@@ -296,7 +296,8 @@ def read_temperatures():
 	absdrinnen = round(absfeucht(t2,rh2),2)
 
 # Wassertemperatur mittels DS18B20 lesen
-	t4=read_DS18B20("28-021502f5e1ff")
+	id="28-021502f5e1ff"
+	t4=read_DS18B20(id)
 	
 	
 def absfeucht(t,rh):
