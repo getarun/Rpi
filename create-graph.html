@@ -31,9 +31,7 @@ $(document).ready(function (diffselect) {
 	yAxis:[{
 	      title: {text: 'Humidity'}, opposite: false, floor: 60
 	      },{
-	      title: {text: 'Water [g/m3]'}, floor: 5, ceiling: 25
-	      },{
-	      title: {text:'Intake Cal'}, opposite: false, floor: 0.9, ceiling: 1.1
+	      title: {text:'Temperature'}, ceiling: 40, floor: 10
 	      }
 	],
 
@@ -41,37 +39,36 @@ $(document).ready(function (diffselect) {
 		   '#492970', '#f28f43', '#77a1e5', '#c42525', '#a6c96a'],
 
         series: [{
-            name: 'RH::AUX::', data: []
+            name: 'T1', data: []
             },{
-            name: 'abs - Aux',
-            data: [], yAxis: 1, floor: 12, ceiling: 15
+            name: 'RH1', data: []
             },{
-            name: 'abs - Schrank',
-            data: [], yAxis: 1, floor: 12, ceiling: 15
+            name: 'TMax',
+            data: [], dashtype: 'dot'
             },{
-            name: 'ABS: AUX/Schrank',
-            data: [], yAxis: 2, floor: 0.95, ceiling: 1.05
-	    }
+            name: 'Tmin',
+            data: [], dashtype: 'dot'
+            }
 
 	]
 
     });
 
     $.getJSON('data.php', function(data) {
+        T1 = [[]];
         RH1 = [[]];
-        absAux = [[]];
-        absSchrank = [[]];
-        absCal = [[]];
+        Tmax = [[]];
+        Tmin = [[]];
         for(i=0;i<data.length;i++){
-            RH1[i]=([data[i][0],data[i][4]]);
-            absAux[i]=([data[i][0],data[i][9]]);		/*absdraussen*/
-            absSchrank[i]=([data[i][0],data[i][10]]);		/*absdrinnen */
-	    absCal[i]=([data[i][0],data[1][9]/data[i][10]]);
+            T1[i]=([data[i][0],data[i][1]]);
+	    RH1[i]=([data[i][0],data[i][4]]);
+	    Tmax[i]=([data[i][0],data[i][7]]);
+            Tmin[i]=([data[i][0],data[i][8]]);
         };
         chart.series[0].setData(RH1);
-        chart.series[1].setData(absAux);
-        chart.series[2].setData(absSchrank);
-        chart.series[3].setData(absCal);
+        chart.series[1].setData(T1);
+        chart.series[3].setData(Tmax);
+        chart.series[4].setData(Tmin);
         new Highcharts.StockChart(options);
     });
 /*
@@ -86,57 +83,44 @@ $(document).ready(function (diffselect) {
 	yAxis:[{
 	      title: {text:'Temperature'}, ceiling: 40, floor: 10
 	      },{
-	      title: {text:'Intake Cal'}, opposite: false, floor: 0.95, ceiling: 1.05
+	      title: {text: 'Humidity'}, opposite: false, floor: 60
 	      }
 	],
 
         series: [{
-            name: 'AUX',
+            name: 'T2',
             data: [], dashtype: 'dot'
-            },
-	      {
-            name: 'Schrank',
-            data: []
-            },
-	    {
-            name: 'Zuluft',
+            },{
+            name: 'RH2',
             data: []
             },{
-            name: 'Tmax',
-            data: [],
+            name: 'TMax',
+            data: [], dashtype: 'dot'
             },{
             name: 'Tmin',
-            data: []
-            },{
-            name: 'absCal',
-            data: [], yAxis: 1
-	    }
+            data: [], dashtype: 'dot'
+            }
 
 	]
 
     });
 
     $.getJSON('data.php', function(data) {
-        T1 = [[]];
         T2 = [[]];
-        T3 = [[]];
         Tmax = [[]];
         Tmin = [[]];
-        absCal = [[]];
+        RH2 =[[]];
         for(i=0;i<data.length;i++){
-            T1[i]=([data[i][0],data[i][1]]);
+            RH2[i]=([data[i][0],data[i][5]]);
             T2[i]=([data[i][0],data[i][2]]);
-            T3[i]=([data[i][0],data[i][3]]);
             Tmax[i]=([data[i][0],data[i][7]]);
             Tmin[i]=([data[i][0],data[i][8]]);
-	    absCal[i]=([data[i][0],data[1][9]/data[i][10]]);
+	    
         };
-        chart2.series[0].setData(T1);
-        chart2.series[1].setData(T2);
-        chart2.series[2].setData(T3);
-        chart2.series[3].setData(Tmax);
-        chart2.series[4].setData(Tmin);
-        chart2.series[5].setData(absCal);
+        chart2.series[0].setData(T2);
+        chart2.series[1].setData(RH2);
+        chart2.series[2].setData(Tmax);
+        chart2.series[3].setData(Tmin);
         new Highcharts.StockChart(options);
     });
 /*
@@ -150,13 +134,29 @@ $(document).ready(function (diffselect) {
 	},
 	yAxis:[{
 	      title: {text:'Temperature'}, ceiling: 20, floor: 10
+	      },{
+	      title: {text:'Intake Cal'}, opposite: false, floor: 0.95, ceiling: 1.05
+	      },{
+	      title: {text: 'Water [g/m3]'}, floor: 5, ceiling: 25
 	      }
 	],
 
         series: [{
-            name: 'H2o',
+            name: 'T - H2o',
             data: [], dashtype: 'dot'
-            }
+            },{
+            name: 'T - Aussen',
+            data: [], dashtype: 'dot'
+            },{
+            name: 'abs - Aux',
+            data: [], yAxis: 2, floor: 12, ceiling: 15
+            },{
+            name: 'abs - Schrank',
+            data: [], yAxis: 2, floor: 12, ceiling: 15
+            },{
+            name: 'Cal: AUX/Schrank',
+            data: [], yAxis: 1, floor: 0.95, ceiling: 1.05
+	    }
 
 	]
 
@@ -164,10 +164,22 @@ $(document).ready(function (diffselect) {
 
     $.getJSON('data.php', function(data) {
         T4 = [[]];
+        absAux = [[]];
+        absSchrank = [[]];
+        absCal = [[]];
+        T3 = [[]];
         for(i=0;i<data.length;i++){
             T4[i]=([data[i][0],data[i][1]]);
+            T3[i]=([data[i][0],data[i][3]]);
+            absCal[i]=([data[i][0],data[1][9]/data[i][10]]);
+            absAux[i]=([data[i][0],data[i][9]]);		/*absdraussen*/
+            absSchrank[i]=([data[i][0],data[i][10]]);		/*absdrinnen */
             };
         chart3.series[0].setData(T4);
+        chart3.series[1].setData(T3);
+        chart3.series[2].setData(absAux);
+        chart3.series[3].setData(absSchrank);
+        chart3.series[4].setData(absCal);
         new Highcharts.StockChart(options);
     });
 
