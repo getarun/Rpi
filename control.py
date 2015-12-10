@@ -8,8 +8,8 @@ test_light  = 	"false"
 test_relais = 	"false"
 use_db      = 	"true"
 use_file    = 	"true"
-create_new_db = "false"
-use_json    =	"true"
+create_new_db = "true"
+use_json    =	"false"
 import json
 #be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
 verbose = 1
@@ -71,6 +71,9 @@ name2  = " Schrank "	#absdrinnen
 rh2pin = 20				# T2 |	RH2 # Schrank
 name3  = " Zuluft  "
 rh3pin = 21				# T3 |	RH3 # Zuluft
+name4 = "Wassertemp"
+#Pin 1-wire (GPIO5 geänert in /boot/config.txt
+
 
 #set output pins
 GPIO.setup(fanpinlow, GPIO.OUT)
@@ -247,6 +250,7 @@ def status_to_console():
 	print'RH1/T1:: {} ::   {}% | {}*C'.format(name1,rh1,t1)
 	print'RH2/T2:: {} ::   {}% | {}*C'.format(name2,rh2,t2)
 	print'RH3/T3:: {} ::   {}% | {}*C'.format(name3,rh3,t3)
+	print'DS18B :: {} ::   {}*C'.format(name4,t4)
 	print'[g/m³] (AUX/Schrank) :: {} | {}'.format(absdraussen,absdrinnen)
 	print ''
 	print('Fan-level: {}'.format(fanstate))
@@ -264,7 +268,7 @@ def status_to_console():
 
 def read_temperatures():
 # Schreibt alle Variablen fuer die anderen Funktionen
-	global rh1,rh2,rh3,t1,t2,t3
+	global rh1,rh2,rh3,t1,t2,t3,t4
 	global absdraussen,absdrinnen
 	global timestamp
   #zeit im ms seid 1/1/1970 + 2h UTC=>berlin+7200					
@@ -291,6 +295,10 @@ def read_temperatures():
 	absdraussen = round(absfeucht(t1,rh1),2)
 	absdrinnen = round(absfeucht(t2,rh2),2)
 
+# Wassertemperatur mittels DS18B20 lesen
+	t4=read_DS18B20("28-021502f5e1ff")
+	
+	
 def absfeucht(t,rh):
         tk=t+273.15 ## Temperatur in Kelvin
 
@@ -307,6 +315,21 @@ def absfeucht(t,rh):
                 print ('T={},RH={} ==> Absolute Feuchte {} [g/m^3]').format(t,rh,af)
         return af
 
+def read_DS18B20(id):
+  value = 0
+  path="/sys/bus/w1/"+id+"/w1_slave"
+  try:
+    f = open(path, "r")
+    line = f.readline()
+    if re.match(r"([0-9a-f]{2} ){9}: crc=[0-9a-f]{2} YES", line):
+      line = f.readline()
+      m = re.match(r"([0-9a-f]{2} ){9}t=([+-]?[0-9]+)", line)
+      if m:
+        value = float(m.group(2) / 1000.0)
+    f.close()
+  except (IOError), e:
+    print time.strftime("%x %X"), "Error reading", path, ": ", e
+  return value
 
 def init_sensors():
 	print('    Initialisiere Messpunkte (DHT22 1-3) mit Adafruit-Library...')
@@ -324,7 +347,7 @@ def create_database_stucture():
 #		cursor.execute("DROP DATABASE {}".format(DB_NAME))
 		cursor.execute("CREATE USER 'pi'@'localhost' IDENTIFIED BY 'pi'")
 		cursor.execute("CREATE DATABASE IF NOT EXISTS {} CHARACTER SET=utf8".format(DB_NAME))
-		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, date DATETIME, temp1 REAL, temp2 REAL, temp3 REAL, rh1 REAL, rh2 REAL, rh3 REAL, tmax REAL, tmin REAL, absdraussen REAL, absdrinnen REAL) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE))
+		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, date DATETIME, temp1 REAL, temp2 REAL, temp3 REAL, rh1 REAL, rh2 REAL, rh3 REAL, tmax REAL, tmin REAL, absdraussen REAL, absdrinnen REAL, t4 REAL) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE))
 		cursor.execute("GRANT ALL PRIVILEGES on {}.{} TO 'pi'@'localhost'".format(DB_NAME,DB_TABLE))
 		cursor.execute("FLUSH PRIVILEGES")
 	except mysql.connector.Error as err:
@@ -340,7 +363,7 @@ def insert_into_sql():
 	date = "'"+str(time.strftime('%Y-%m-%dT%H:%M:%S'))+"'"		#SQL compatible time-object
 	
 	try:
-		cursor.execute("INSERT into {}.{} values ({},{},{},{},{},{},{},{},{},{},{},{})".format(DB_NAME,DB_TABLE,timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen))
+		cursor.execute("INSERT into {}.{} values ({},{},{},{},{},{},{},{},{},{},{},{},{})".format(DB_NAME,DB_TABLE,timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen,t4))
 		cnx.commit()
 	except mysql.connector.Error as err:
 		print("Failed inserting ({},{},{},{},{},{},{},{},{},{},{},{}) into table {}/{}: {}".format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen,DB_NAME,DB_TABLE,err))
