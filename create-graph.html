@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
-<title>Version 3.5</title>
+<title></title>
 </head>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -15,6 +15,7 @@
 
 <div id="container" style="height: 400px; min-width: 600px"></div>
 <div id="container2" style="height: 400px; min-width: 600px"></div>
+<div id="container3" style="height: 400px; min-width: 600px"></div>
 
 <script type="text/javascript">
 $.ajaxSetup({ scriptCharset: "utf-8" , contentType: "application/json; charset=utf-8"});
@@ -136,6 +137,37 @@ $(document).ready(function (diffselect) {
         chart2.series[3].setData(Tmax);
         chart2.series[4].setData(Tmin);
         chart2.series[5].setData(absCal);
+        new Highcharts.StockChart(options);
+    });
+/*
+###################################################################################################################
+*/
+    chart3 = new Highcharts.StockChart({
+	chart:{
+	    renderTo: 'container3',
+	    alignTicks: false,
+	    animation: false
+	},
+	yAxis:[{
+	      title: {text:'Temperature'}, ceiling: 20, floor: 10
+	      }
+	],
+
+        series: [{
+            name: 'H2o',
+            data: [], dashtype: 'dot'
+            }
+
+	]
+
+    });
+
+    $.getJSON('data.php', function(data) {
+        T4 = [[]];
+        for(i=0;i<data.length;i++){
+            T4[i]=([data[i][0],data[i][1]]);
+            };
+        chart3.series[0].setData(T4);
         new Highcharts.StockChart(options);
     });
 
