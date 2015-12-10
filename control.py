@@ -318,6 +318,8 @@ def absfeucht(t,rh):
 def read_DS18B20(id):
   value = 0
   path="/sys/bus/w1/"+id+"/w1_slave"
+  if verbose == 1:
+  	print ('Sensor---Path{}').format(id)
   try:
     f = open(path, "r")
     line = f.readline()
