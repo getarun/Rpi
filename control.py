@@ -7,8 +7,8 @@ version     = 	"3.5-github"
 test_light  = 	"false"
 test_relais = 	"false"
 use_db      = 	"true"
-use_file    = 	"true"
-create_new_db = "true"
+use_file    = 	"false"
+create_new_db = "false"
 use_json    =	"false"
 import json
 #be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
