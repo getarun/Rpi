@@ -317,7 +317,7 @@ def absfeucht(t,rh):
         return af
 
 def read_DS18B20(id):
-  value = 0
+  value = "0"
   path="/sys/bus/w1/devices/"+id+"/w1_slave"
   if verbose == 1:
   	print ('Sensor---Path{}').format(path)
@@ -332,7 +332,7 @@ def read_DS18B20(id):
     f.close()
   except (IOError), e:
     print time.strftime("%x %X"), "Error reading", path, ": ", e
-  return value
+  return float(value)
 
 def init_sensors():
 	print('    Initialisiere Messpunkte (DHT22 1-3) mit Adafruit-Library...')
