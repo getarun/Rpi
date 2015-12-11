@@ -8,9 +8,9 @@ version     = 	"update to rpi 4.1.1"
 test_light  = 	"false"
 test_relais = 	"false"
 use_db      = 	"true"
-use_file    = 	"false"
+use_file    = 	"true"
 create_new_db = "false"
-use_json    =	"false"
+#use_json    =	"false"
 import json
 #be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
 verbose = 0
@@ -378,7 +378,7 @@ def insert_into_file():
 		print("Writing values {},{},{},{},{},{},{},{},{},{},{},{},{} into file".format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen,t4))
 	if use_json == "false":
 		with open("./data.list", "a") as file_list:
-			file_list.write(timestamp+"\t"+date+"\t"+t1+"\t"+t2+"\t"+t3+"\t"+rh1+"\t"+rh2+"\t"+rh3+"\t"+tmax+"\t"+tmin+"\t"+absdraussen+"\t"+absdrinnen+"\n")
+			file_list.write(timestamp+"\t"+date+"\t"+t1+"\t"+t2+"\t"+t3+"\t"+rh1+"\t"+rh2+"\t"+rh3+"\t"+tmax+"\t"+tmin+"\t"+absdraussen+"\t"+absdrinnen+"\t"+t4+"\n")
 	if use_json == "true":
 		print 'JSON-insert-into-file: removed because not tested'
 		#with open("./data.json", "a") as file_json:
