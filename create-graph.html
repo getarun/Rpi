@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
-<title>tag v1.0</title>
+<title></title>
 </head>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -13,8 +13,11 @@
 <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
 <script type="text/javascript" src="http://www.highcharts.com/samples/data/usdeur.js"></script>
 
-<div id="container" style="height: 400px; min-width: 600px"></div>
-<div id="container2" style="height: 400px; min-width: 600px"></div>
+<div>	
+	<div id="container" align:left></div>
+	<div id="container2" align:left ></div>
+</div>
+<div id="container3" style="height: 400px; width: 800px"></div>
 
 <script type="text/javascript">
 $.ajaxSetup({ scriptCharset: "utf-8" , contentType: "application/json; charset=utf-8"});
@@ -28,11 +31,9 @@ $(document).ready(function (diffselect) {
 	    animation: false
 	},
 	yAxis:[{
-	      title: {text: 'Humidity'}, opposite: false, floor: 60
+	      title: {text: 'Humidity'}, opposite: false
 	      },{
-	      title: {text: 'Water [g/m3]'}, floor: 5, ceiling: 25
-	      },{
-	      title: {text:'Intake Cal'}, opposite: false, floor: 0.9, ceiling: 1.1
+	      title: {text:'Temperature'}
 	      }
 	],
 
@@ -40,37 +41,36 @@ $(document).ready(function (diffselect) {
 		   '#492970', '#f28f43', '#77a1e5', '#c42525', '#a6c96a'],
 
         series: [{
-            name: 'RH::AUX::', data: []
+            name: 'T1', data: [], axis: 1
             },{
-            name: 'abs - Aux',
-            data: [], yAxis: 1, floor: 12, ceiling: 15
+            name: 'RH1', data: []
             },{
-            name: 'abs - Schrank',
-            data: [], yAxis: 1, floor: 12, ceiling: 15
+            name: 'TMax',
+            data: [], dashtype: 'dot', axis: 1
             },{
-            name: 'ABS: AUX/Schrank',
-            data: [], yAxis: 2, floor: 0.95, ceiling: 1.05
-	    }
+            name: 'Tmin',
+            data: [], dashtype: 'dot', axis: 1
+            }
 
 	]
 
     });
 
     $.getJSON('data.php', function(data) {
+        T1 = [[]];
         RH1 = [[]];
-        absAux = [[]];
-        absSchrank = [[]];
-        absCal = [[]];
+        Tmax = [[]];
+        Tmin = [[]];
         for(i=0;i<data.length;i++){
-            RH1[i]=([data[i][0],data[i][4]]);
-            absAux[i]=([data[i][0],data[i][9]]);		/*absdraussen*/
-            absSchrank[i]=([data[i][0],data[i][10]]);		/*absdrinnen */
-	    absCal[i]=([data[i][0],data[1][9]/data[i][10]]);
+            T1[i]=([data[i][0],data[i][1]]);
+	    RH1[i]=([data[i][0],data[i][4]]);
+	    Tmax[i]=([data[i][0],data[i][7]]);
+            Tmin[i]=([data[i][0],data[i][8]]);
         };
-        chart.series[0].setData(RH1);
-        chart.series[1].setData(absAux);
-        chart.series[2].setData(absSchrank);
-        chart.series[3].setData(absCal);
+        chart.series[1].setData(RH1);
+        chart.series[0].setData(T1);
+        chart.series[2].setData(Tmax);
+        chart.series[3].setData(Tmin);
         new Highcharts.StockChart(options);
     });
 /*
@@ -83,31 +83,80 @@ $(document).ready(function (diffselect) {
 	    animation: false
 	},
 	yAxis:[{
-	      title: {text:'Temperature'}, ceiling: 40, floor: 10
+	      title: {text:'Temperature'}
 	      },{
-	      title: {text:'Intake Cal'}, opposite: false, floor: 0.95, ceiling: 1.05
+	      title: {text: 'Humidity'}, opposite: false
 	      }
 	],
 
         series: [{
-            name: 'AUX',
-            data: [], dashtype: 'dot'
-            },
-	      {
-            name: 'Schrank',
-            data: []
-            },
-	    {
-            name: 'Zuluft',
+            name: 'T3',
             data: []
             },{
-            name: 'Tmax',
-            data: [],
+            name: 'RH3',
+            data: [], axis: 1
+            },{
+            name: 'TMax',
+            data: [], dashtype: 'dot'
             },{
             name: 'Tmin',
-            data: []
+            data: [], dashtype: 'dot'
+            }
+
+	]
+
+    });
+
+    $.getJSON('data.php', function(data) {
+        T3 = [[]];
+        Tmax = [[]];
+        Tmin = [[]];
+        RH3 =[[]];
+        for(i=0;i<data.length;i++){
+            RH3[i]=([data[i][0],data[i][6]]);
+            T3[i]=([data[i][0],data[i][3]]);
+            Tmax[i]=([data[i][0],data[i][7]]);
+            Tmin[i]=([data[i][0],data[i][8]]);
+	    
+        };
+        chart2.series[0].setData(T3);
+        chart2.series[1].setData(RH3);
+        chart2.series[2].setData(Tmax);
+        chart2.series[3].setData(Tmin);
+        new Highcharts.StockChart(options);
+    });
+/*
+###################################################################################################################
+*/
+    chart3 = new Highcharts.StockChart({
+	chart:{
+	    renderTo: 'container3',
+	    alignTicks: false,
+	    animation: false
+	},
+	yAxis:[{
+	      title: {text:'Temperature'}
+	      },{
+	      title: {text:'Intake Cal'}, opposite: false
+	      },{
+	      title: {text: 'Water [g/m3]'}
+	      }
+	],
+
+        series: [{
+            name: 'T - H2o',
+            data: [], dashtype: 'dot'
             },{
-            name: 'absCal',
+            name: 'T - Aussen',
+            data: [], dashtype: 'dot'
+            },{
+            name: 'abs - Aussen',
+            data: [], yAxis: 2
+            },{
+            name: 'abs - Schrank',
+            data: [], yAxis: 2
+            },{
+            name: 'Cal: Aussen/Schrank',
             data: [], yAxis: 1
 	    }
 
@@ -116,26 +165,23 @@ $(document).ready(function (diffselect) {
     });
 
     $.getJSON('data.php', function(data) {
-        T1 = [[]];
-        T2 = [[]];
-        T3 = [[]];
-        Tmax = [[]];
-        Tmin = [[]];
+        T4 = [[]];
+        absAus = [[]];
+        absSchrank = [[]];
         absCal = [[]];
+        T2 = [[]];
         for(i=0;i<data.length;i++){
-            T1[i]=([data[i][0],data[i][1]]);
-            T2[i]=([data[i][0],data[i][2]]);
-            T3[i]=([data[i][0],data[i][3]]);
-            Tmax[i]=([data[i][0],data[i][7]]);
-            Tmin[i]=([data[i][0],data[i][8]]);
-	    absCal[i]=([data[i][0],data[1][9]/data[i][10]]);
-        };
-        chart2.series[0].setData(T1);
-        chart2.series[1].setData(T2);
-        chart2.series[2].setData(T3);
-        chart2.series[3].setData(Tmax);
-        chart2.series[4].setData(Tmin);
-        chart2.series[5].setData(absCal);
+            T4[i]=([data[i][0],data[i][11]]);
+     	    T2[i]=([data[i][0],data[i][2]]);	
+            absCal[i]=([data[i][0],data[1][9]/data[i][10]]);
+            absAus[i]=([data[i][0],data[i][9]]);		/*absdraussen*/
+            absSchrank[i]=([data[i][0],data[i][10]]);		/*absdrinnen */
+            };
+        chart3.series[0].setData(T4);
+        chart3.series[1].setData(T2);
+        chart3.series[2].setData(absAus);
+        chart3.series[3].setData(absSchrank);
+        chart3.series[4].setData(absCal);
         new Highcharts.StockChart(options);
     });
 

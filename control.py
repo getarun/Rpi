@@ -1,15 +1,16 @@
+
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 ## Steuerungs Script
 
 # Zuluftsteuerung und Zuteilung der einzelnen Messpunkte
-version     = 	"3.5-github"
+version     = 	"update to rpi 4.1.1"
 test_light  = 	"false"
 test_relais = 	"false"
 use_db      = 	"true"
-use_file    = 	"true"
+use_file    = 	"false"
 create_new_db = "false"
-use_json    =	"true"
+use_json    =	"false"
 import json
 #be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
 verbose = 1
@@ -55,7 +56,7 @@ GPIO.setmode(GPIO.BCM)		#GPIO-numbering
 #GPIO.setmode(GPIO.BOARD)	#Pin-numbering 1-40
 
 # Relais-Pins
-fanpinlow = 5				# Relais-Pin der kleinsten Luefter-Spannungsversorgung
+fanpinlow = 12				# Relais-Pin der kleinsten Luefter-Spannungsversorgung
 fanpinmid = 6
 fanpinhigh = 13				# Relais-Pin der hoechsten Luefter-Spannungsversorgung
 intakepin = 19				# GPIO-Pin des Zuluft-Fan-Relais
@@ -65,12 +66,15 @@ lightpin = 26				# GPIO des Licht-Relais
 # auch wennGPIO.BOARD gesetzt ist, Pin zwischen 0-31 setzen (DHT22) BOARDpin 32 = BCOMpin 12
 rhsensor = Adafruit_DHT.DHT22
 #
-name1  = "   AUX   "	#absdraussen
+name1  = "        LSR    "	#absdraussen
 rh1pin = 16				# T1 |	RH1 # langer Sensor -- Entfeuchter
-name2  = " Schrank "	#absdrinnen
+name2  = "       Raum    "	#absdrinnen
 rh2pin = 20				# T2 |	RH2 # Schrank
-name3  = " Zuluft  "
+name3  = "        NDL    "
 rh3pin = 21				# T3 |	RH3 # Zuluft
+name4 = "Wassertemp"
+#Pin 1-wire (GPIO5 geaenert in /boot/config.txt
+
 
 #set output pins
 GPIO.setup(fanpinlow, GPIO.OUT)
@@ -247,7 +251,8 @@ def status_to_console():
 	print'RH1/T1:: {} ::   {}% | {}*C'.format(name1,rh1,t1)
 	print'RH2/T2:: {} ::   {}% | {}*C'.format(name2,rh2,t2)
 	print'RH3/T3:: {} ::   {}% | {}*C'.format(name3,rh3,t3)
-	print'[g/m³] (AUX/Schrank) :: {} | {}'.format(absdraussen,absdrinnen)
+	print'DS18B :: {} ::   {}*C'.format(name4,t4)
+	print'[g/cmeter] (AUX/Schrank) :: {} | {}'.format(absdraussen,absdrinnen)
 	print ''
 	print('Fan-level: {}'.format(fanstate))
 	print('Intake-level: {}'.format(intakestate))
@@ -264,7 +269,7 @@ def status_to_console():
 
 def read_temperatures():
 # Schreibt alle Variablen fuer die anderen Funktionen
-	global rh1,rh2,rh3,t1,t2,t3
+	global rh1,rh2,rh3,t1,t2,t3,t4
 	global absdraussen,absdrinnen
 	global timestamp
   #zeit im ms seid 1/1/1970 + 2h UTC=>berlin+7200					
@@ -288,9 +293,14 @@ def read_temperatures():
 	if verbose == 1:
 		print('main: Sensor3: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t3,rh3))
 	
-	absdraussen = round(absfeucht(t1,rh1),2)
-	absdrinnen = round(absfeucht(t2,rh2),2)
+	absdraussen = round(absfeucht(t2,rh2),2)
+	absdrinnen = round(absfeucht(t3,rh3),2)
 
+# Wassertemperatur mittels DS18B20 lesen
+	id="28-021502f5e1ff"
+	t4=read_DS18B20(id)
+	
+	
 def absfeucht(t,rh):
         tk=t+273.15 ## Temperatur in Kelvin
 
@@ -307,6 +317,20 @@ def absfeucht(t,rh):
                 print ('T={},RH={} ==> Absolute Feuchte {} [g/m^3]').format(t,rh,af)
         return af
 
+def read_DS18B20(id):
+  path="/sys/bus/w1/devices/"+id+"/w1_slave"
+  if verbose == 1:
+  	print ('Sensor---Path{}').format(path)
+  try:
+    sensorfile = open(path, "r")
+    outputtext = sensorfile.read()
+    sensorfile.close()
+    tempdata = outputtext.split("\n")[1].split(" ")[9]
+    temperature = float(tempdata[2:])
+    temperature = temperature / 1000
+  except (IOError), e:
+    print time.strftime("%x %X"), "Error reading", path, ": ", e
+  return temperature
 
 def init_sensors():
 	print('    Initialisiere Messpunkte (DHT22 1-3) mit Adafruit-Library...')
@@ -324,7 +348,7 @@ def create_database_stucture():
 #		cursor.execute("DROP DATABASE {}".format(DB_NAME))
 		cursor.execute("CREATE USER 'pi'@'localhost' IDENTIFIED BY 'pi'")
 		cursor.execute("CREATE DATABASE IF NOT EXISTS {} CHARACTER SET=utf8".format(DB_NAME))
-		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, date DATETIME, temp1 REAL, temp2 REAL, temp3 REAL, rh1 REAL, rh2 REAL, rh3 REAL, tmax REAL, tmin REAL, absdraussen REAL, absdrinnen REAL) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE))
+		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, date DATETIME, temp1 REAL, temp2 REAL, temp3 REAL, rh1 REAL, rh2 REAL, rh3 REAL, tmax REAL, tmin REAL, absdraussen REAL, absdrinnen REAL, t4 REAL) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE))
 		cursor.execute("GRANT ALL PRIVILEGES on {}.{} TO 'pi'@'localhost'".format(DB_NAME,DB_TABLE))
 		cursor.execute("FLUSH PRIVILEGES")
 	except mysql.connector.Error as err:
@@ -340,15 +364,15 @@ def insert_into_sql():
 	date = "'"+str(time.strftime('%Y-%m-%dT%H:%M:%S'))+"'"		#SQL compatible time-object
 	
 	try:
-		cursor.execute("INSERT into {}.{} values ({},{},{},{},{},{},{},{},{},{},{},{})".format(DB_NAME,DB_TABLE,timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen))
+		cursor.execute("INSERT into {}.{} values ({},{},{},{},{},{},{},{},{},{},{},{},{})".format(DB_NAME,DB_TABLE,timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen,t4))
 		cnx.commit()
 	except mysql.connector.Error as err:
-		print("Failed inserting ({},{},{},{},{},{},{},{},{},{},{},{}) into table {}/{}: {}".format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen,DB_NAME,DB_TABLE,err))
+		print("Failed inserting ({},{},{},{},{},{},{},{},{},{},{},{},{}) into table {}/{}: {}".format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen,t4,DB_NAME,DB_TABLE,err))
 	##########################################################################
 	
 def insert_into_file():
 	if verbose == "1":
-		print("Writing values {},{},{},{},{},{},{},{},{},{},{},{} into file".format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen))
+		print("Writing values {},{},{},{},{},{},{},{},{},{},{},{},{} into file".format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen,t4))
 	if use_json == "false":
 		with open("./data.list", "w") as file_list:
 			file_list.write(timestamp+"\t"+date+"\t"+t1+"\t"+t2+"\t"+t3+"\t"+rh1+"\t"+rh2+"\t"+rh3+"\t"+tmax+"\t"+tmin+"\t"+absdraussen+"\t"+absdrinnen+"\n")
