@@ -150,13 +150,13 @@ $(document).ready(function (diffselect) {
             name: 'T - Aussen',
             data: [], dashtype: 'dot'
             },{
-            name: 'abs - Aux',
+            name: 'abs - Aussen',
             data: [], yAxis: 2
             },{
             name: 'abs - Schrank',
             data: [], yAxis: 2
             },{
-            name: 'Cal: AUX/Schrank',
+            name: 'Cal: Aussen/Schrank',
             data: [], yAxis: 1
 	    }
 
@@ -166,7 +166,7 @@ $(document).ready(function (diffselect) {
 
     $.getJSON('data.php', function(data) {
         T4 = [[]];
-        absAux = [[]];
+        absAus = [[]];
         absSchrank = [[]];
         absCal = [[]];
         T2 = [[]];
@@ -174,12 +174,12 @@ $(document).ready(function (diffselect) {
             T4[i]=([data[i][0],data[i][11]]);
      	    T2[i]=([data[i][0],data[i][2]]);	
             absCal[i]=([data[i][0],data[1][9]/data[i][10]]);
-            absAux[i]=([data[i][0],data[i][9]]);		/*absdraussen*/
+            absAus[i]=([data[i][0],data[i][9]]);		/*absdraussen*/
             absSchrank[i]=([data[i][0],data[i][10]]);		/*absdrinnen */
             };
         chart3.series[0].setData(T4);
         chart3.series[1].setData(T2);
-        chart3.series[2].setData(absAux);
+        chart3.series[2].setData(absAus);
         chart3.series[3].setData(absSchrank);
         chart3.series[4].setData(absCal);
         new Highcharts.StockChart(options);
