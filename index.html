@@ -27,7 +27,8 @@
 <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
 <script type="text/javascript" src="http://www.highcharts.com/samples/data/usdeur.js"></script>
 
-	<div id="container" align:left></div>
+	<div id="container"></div>
+	<div id="container2"></div>
 
 <script type="text/javascript">
 $.ajaxSetup({ scriptCharset: "utf-8" , contentType: "application/json; charset=utf-8"});
@@ -64,6 +65,59 @@ $(document).ready(function (diffselect) {
         chart.series[1].setData(EC);
         new Highcharts.StockChart(options);
     });
+    
+    /*
+###################################################################################################################
+*/
+    chart2 = new Highcharts.StockChart({
+	chart:{
+	    renderTo: 'container2',
+	    alignTicks: false,
+	    animation: false
+	},
+	yAxis:[{
+	      title: {text:'Temperature'}
+	      },{
+	      title: {text: 'Humidity'}, opposite: false
+	      }
+	],
+        series: [{
+            name: 'T3',
+            data: []
+            },{
+            name: 'RH3',
+            data: [], axis: 1
+            },{
+            name: 'TMax',
+            data: [], dashtype: 'dot'
+            },{
+            name: 'Tmin',
+            data: [], dashtype: 'dot'
+            }
+	]
+    });
+    $.getJSON('data.php', function(data) {
+        T3 = [[]];
+        Tmax = [[]];
+        Tmin = [[]];
+        RH3 =[[]];
+        for(i=0;i<data.length;i++){
+            RH3[i]=([data[i][0],data[i][6]]);
+            T3[i]=([data[i][0],data[i][3]]);
+            Tmax[i]=([data[i][0],data[i][7]]);
+            Tmin[i]=([data[i][0],data[i][8]]);
+	    
+        };
+        chart2.series[0].setData(T3);
+        chart2.series[1].setData(RH3);
+        chart2.series[2].setData(Tmax);
+        chart2.series[3].setData(Tmin);
+        new Highcharts.StockChart(options);
+    });
+/*
+###################################################################################################################
+*/
+
 });
 </script>
 </html>
