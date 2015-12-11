@@ -9,6 +9,7 @@ $amount      	= 500;
 $PH		= 5.8;
 $EC		= 1.2;
 */
+echo "<h1>plantnumber:" . $_POST["plantnumber"] . "</h1>";
 $timestamp 	= time()*1000+7200;
 
   $dbc 		= mysqli_connect("localhost", "pi", "pi", "klima_growbox");
@@ -19,3 +20,4 @@ $timestamp 	= time()*1000+7200;
   }
   mysqli_close($dbc);
 ?>
+	
