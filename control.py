@@ -293,8 +293,8 @@ def read_temperatures():
 	if verbose == 1:
 		print('main: Sensor3: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t3,rh3))
 	
-	absdraussen = round(absfeucht(t1,rh1),2)
-	absdrinnen = round(absfeucht(t2,rh2),2)
+	absdraussen = round(absfeucht(t2,rh2),2)
+	absdrinnen = round(absfeucht(t3,rh3),2)
 
 # Wassertemperatur mittels DS18B20 lesen
 	id="28-021502f5e1ff"
