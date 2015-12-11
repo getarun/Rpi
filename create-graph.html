@@ -169,6 +169,7 @@ $(document).ready(function (diffselect) {
         absAux = [[]];
         absSchrank = [[]];
         absCal = [[]];
+        T2 = [[]];
         for(i=0;i<data.length;i++){
             T4[i]=([data[i][0],data[i][11]]);
      	    T2[i]=([data[i][0],data[i][2]]);	
@@ -177,7 +178,7 @@ $(document).ready(function (diffselect) {
             absSchrank[i]=([data[i][0],data[i][10]]);		/*absdrinnen */
             };
         chart3.series[0].setData(T4);
-        chart3.series[1].setData(T3);
+        chart3.series[1].setData(T2);
         chart3.series[2].setData(absAux);
         chart3.series[3].setData(absSchrank);
         chart3.series[4].setData(absCal);
