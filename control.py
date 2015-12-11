@@ -257,7 +257,7 @@ def status_to_console():
 	print'RH2/T2:: {} ::   {}% | {}*C'.format(name2,rh2,t2)
 	print'RH3/T3:: {} ::   {}% | {}*C'.format(name3,rh3,t3)
 	print'DS18B :: {} ::   {}*C'.format(name4,t4)
-	print'[g/cmeter] (AUX/Schrank) :: {} | {}'.format(absdraussen,absdrinnen)
+	print'[g/cmeter] ({}/{}) :: {} /  {} :: {}'.format(name2,name3,absdraussen,abscal,absdrinnen)
 	print ''
 	print('Fan-level: {}'.format(fanstate))
 	print('Intake-level: {}'.format(intakestate))
@@ -272,7 +272,7 @@ def status_to_console():
 def read_temperatures():
 # Schreibt alle Variablen fuer die anderen Funktionen
 	global rh1,rh2,rh3,t1,t2,t3,t4
-	global absdraussen,absdrinnen
+	global absdraussen,absdrinnen,abscal
   #zeit im ms seid 1/1/1970 + 2h UTC=>berlin+7200					
 	timestamp = time.time()*1000+7200	
 
@@ -296,7 +296,7 @@ def read_temperatures():
 	
 	absdraussen = round(absfeucht(t2,rh2),2)						######################
 	absdrinnen = round(absfeucht(t3,rh3),2)							######################
-
+	abscal = absdraussen/absdrinnen
 # Wassertemperatur mittels DS18B20 lesen
 	id="28-021502f5e1ff"
 	t4=read_DS18B20(id)
