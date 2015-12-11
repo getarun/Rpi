@@ -18,5 +18,52 @@
 	<input type="submit"/>
 </form>
 <center> <b><a href="create-graph.html" target="_blank">Show graph on last days:</a> </b> </center>
+
 </body>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script src="http://code.highcharts.com/stock/highstock.js"></script>
+<script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+<script type="text/javascript" src="http://www.highcharts.com/samples/data/usdeur.js"></script>
+
+	<div id="container" align:left></div>
+
+<script type="text/javascript">
+$.ajaxSetup({ scriptCharset: "utf-8" , contentType: "application/json; charset=utf-8"});
+$(document).ready(function (diffselect) {
+    chart = new Highcharts.StockChart({
+	chart:{
+	    renderTo: 'container',
+	    alignTicks: false,
+	    animation: false
+	},
+	yAxis:[{
+	      title: {text: 'PH'}, opposite: false
+	      },{
+	      title: {text:'EC'}
+	      }
+	],
+	colors: ['#2f7ed8', '#0d233a', '#8bbc21', '#910000', '#1aadce', 
+		   '#492970', '#f28f43', '#77a1e5', '#c42525', '#a6c96a'],
+        series: [{
+            name: 'PH', data: [], axis: 1
+            },{
+            name: 'EC', data: []
+            }
+	]
+    });
+    $.getJSON('data-ec.php', function(data) {
+        PH = [[]];
+        EC = [[]];
+        for(i=0;i<data.length;i++){
+            PH[i]=([data[i][0],data[i][1]]);
+	    EC[i]=([data[i][0],data[i][4]]);
+        };
+        chart.series[1].setData(PH);
+        chart.series[0].setData(EC);
+        new Highcharts.StockChart(options);
+    });
+});
+</script>
 </html>
