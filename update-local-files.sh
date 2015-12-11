@@ -22,4 +22,3 @@ install -g 0 -o 0 -m 0644 control.py.1 /usr/local/share/man/man1/control.py.1
 sudo gzip /usr/local/share/man/man1/control.py.1
 echo "updating man-page database"
 sudo mandb #updates manual pages
->>>>>>> 57a4d736797e318d025c463a414f39e09e5017e4
