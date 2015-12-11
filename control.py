@@ -13,7 +13,7 @@ create_new_db = "false"
 use_json    =	"false"
 import json
 #be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
-verbose = 1
+verbose = 0
 clear_konsole_after_cycle = 1
 
 ## checks command line for options "sudo python control.py test_light test_relais will enable test options
@@ -27,16 +27,19 @@ for arg in sys.argv:
 		use_db = "true"
 	if arg == "use_file":
 		use_file = "true"
+	if arg == "use_json":
+		use_json = "true"
 
 # Speichert Werte in Datenbank
 import mysql.connector
 ####################################
-DB_NAME = 'klima_growbox'
-DB_TABLE = 'daten'
+DB_NAME 	= 'klima_growbox'
+DB_TABLE 	= 'daten'
+DB_TABLE2 	= 'giessen'
 #
-DB_USER = 'pi'
-DB_PASSWD = 'pi'
-DB_HOST = 'localhost'
+DB_USER 	= 'pi'
+DB_PASSWD 	= 'pi'
+DB_HOST 	= 'localhost'
 ####################################
 
 import math				#fuer absolute feuchte rechnung
@@ -75,7 +78,6 @@ rh3pin = 21				# T3 |	RH3 # Zuluft
 name4 = "Wassertemp"
 #Pin 1-wire (GPIO5 geaenert in /boot/config.txt
 
-
 #set output pins
 GPIO.setup(fanpinlow, GPIO.OUT)
 GPIO.setup(fanpinmid, GPIO.OUT)
@@ -106,7 +108,7 @@ def lti_relais_control():
 	if verbose == 1:
 		print('fan_control: fanstate is {}'.format(fanstate))
 	fanstateold = fanstate		#save ols fanstate for comparison if one has to switch
-	temp = t2			# regulate on t2 (rh2pin)
+	temp = t3			# regulate on t2 (rh2pin)				#######################
 	######################## Entscheidet sich fur ein LTI-level
 	if temp < tmin:
 		fanstate = "off"
@@ -239,6 +241,9 @@ def test_relais(repeattimes):
 
 		
 def status_to_console():
+	if clear_konsole_after_cycle == 1:
+		#time.sleep(5)
+		os.system('clear')
 	if verbose == 1:
 		print('This is Version {}'.format(version))
 	print '******Temp/Humidity Test******'
@@ -262,9 +267,6 @@ def status_to_console():
 		print('now.isoformat():                         {}'.format(now.isoformat()))
 		print '######################### End of Cycle #########################'
 	print ''
-	if clear_konsole_after_cycle == 1:
-		time.sleep(5)
-		os.system('clear')
 
 
 def read_temperatures():
@@ -293,8 +295,8 @@ def read_temperatures():
 	if verbose == 1:
 		print('main: Sensor3: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t3,rh3))
 	
-	absdraussen = round(absfeucht(t2,rh2),2)
-	absdrinnen = round(absfeucht(t3,rh3),2)
+	absdraussen = round(absfeucht(t2,rh2),2)						######################
+	absdrinnen = round(absfeucht(t3,rh3),2)							######################
 
 # Wassertemperatur mittels DS18B20 lesen
 	id="28-021502f5e1ff"
@@ -302,11 +304,10 @@ def read_temperatures():
 	
 	
 def absfeucht(t,rh):
-        tk=t+273.15 ## Temperatur in Kelvin
-
+# Temperatur in Kelvin
+        tk=t+273.15 
 # sdd Sattigungsdampfdruck bei Temperatur T
         sdd = 6.1078 * 10**((7.5*t)/(237.3+t))
- 
 # Partialdruck des enthaltenen Wassers ist pd=sdd*rh1/100 (Sattigungsdampfdruck*RLF)
         pd=sdd*rh/100
 # Taupunkttemperatur
@@ -346,10 +347,12 @@ def create_database_stucture():
 		cursor = cnx.cursor()
 #		cursor.execute("DROP USER {}@'localhost'".format(DB_USER))
 #		cursor.execute("DROP DATABASE {}".format(DB_NAME))
-		cursor.execute("CREATE USER 'pi'@'localhost' IDENTIFIED BY 'pi'")
+#		cursor.execute("CREATE USER 'pi'@'localhost' IDENTIFIED BY 'pi'")
 		cursor.execute("CREATE DATABASE IF NOT EXISTS {} CHARACTER SET=utf8".format(DB_NAME))
 		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, date DATETIME, temp1 REAL, temp2 REAL, temp3 REAL, rh1 REAL, rh2 REAL, rh3 REAL, tmax REAL, tmin REAL, absdraussen REAL, absdrinnen REAL, t4 REAL) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE))
+		cursor.execute("CREATE TABLE IF NOT EXISTS {}.{} (timestamp REAL, plantnumber INT, amount INT, PH REAL, EC REAL) CHARACTER SET=utf8".format(DB_NAME,DB_TABLE2))
 		cursor.execute("GRANT ALL PRIVILEGES on {}.{} TO 'pi'@'localhost'".format(DB_NAME,DB_TABLE))
+		cursor.execute("GRANT ALL PRIVILEGES on {}.{} TO 'pi'@'localhost'".format(DB_NAME,DB_TABLE2))
 		cursor.execute("FLUSH PRIVILEGES")
 	except mysql.connector.Error as err:
 		print(err)
@@ -374,18 +377,20 @@ def insert_into_file():
 	if verbose == "1":
 		print("Writing values {},{},{},{},{},{},{},{},{},{},{},{},{} into file".format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen,t4))
 	if use_json == "false":
-		with open("./data.list", "w") as file_list:
+		with open("./data.list", "a") as file_list:
 			file_list.write(timestamp+"\t"+date+"\t"+t1+"\t"+t2+"\t"+t3+"\t"+rh1+"\t"+rh2+"\t"+rh3+"\t"+tmax+"\t"+tmin+"\t"+absdraussen+"\t"+absdrinnen+"\n")
 	if use_json == "true":
-		with open("./data.json", "a") as file_json:
-#			old_data = file_json.read()
-			file_json.write(json.dumps([timestamp, t1,t2,t3,rh1,rh2,rh3,absdraussen,absdrinnen]))
+		print 'JSON-insert-into-file: removed because not tested'
+		#with open("./data.json", "a") as file_json:
+		#	old_data = file_json.read()
+		#	data = old_data
+		#	file_json.write("[",json.dumps([timestamp, t1,t2,t3,rh1,rh2,rh3,absdraussen,absdrinnen],"]"))
 ################### MAIN #########################
 ##Testroutinen
 if test_light == "true":	
-	test_light(1)
+	test_light(2)
 if test_relais == "true":	
-	test_relais(1)
+	test_relais(2)
 ##
 ##########################
 init_sensors()

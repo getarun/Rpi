@@ -1,0 +1,42 @@
+.TH control.py 1 "Version 1.1 - v1.1 on github RePo"
+
+.SH NAME
+control.py v1.1 \- Tracks ambient variables on three DHT22. Writes values to files, MYSQL if desired. Includes test routines.
+  
+
+.SH SYNOPSIS
+.B corrupt
+[\fI use_db] 
+[\fI use_file] [\fI use_json] 
+[\fI test_light] [\fI test_relais]
+
+.SH DESCRIPTION
+.B Control.py
+Keeps track of three different DHT22 sensors that are build up on the test-platine.
+Sensor are called called "AUX","Schrank" and "Zuluft" and their positions(pins on platine) can be 
+changed in control.py. Script includes test-routines, that can be enabled in advance to 
+control operation of the script just by giving appropriate command line options.
+
+.SH OPTIONS
+.TP
+.BR use_db[="true"]
+Activates writing into sql database difined in control.py - Usually it's klima_growbox.daten.
+
+.TP
+.BR use_file[="true"]
+Writes values into file data.list as a bunch of values (untested)
+
+.TP 
+.BR use_json[="true"]
+Writes a json-formatted file calles data.json into some file if use_file="true".
+
+.TP create_new_db[="false"]
+creates a new database structur. Run this on first start to create mysql-framework.
+
+.TP 
+.BR test_light[="false"]
+enables test_light routine in cotrol.py Switches light relais on/off several times.
+
+.TP 
+.BR test_relais[="false"]
+enables test_relais routine in cotrol.py Switches all relais on/off several times.
