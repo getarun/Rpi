@@ -6,7 +6,7 @@
 
 echo "update-local-files: source: /home/pi/git-working-dir/RPi"
 echo "Copying data.php, index.html, create-graph.html, about.php, get-watering.php to webserver (/var/www)"
-sudo cp about.php index.hml data.php index.html get-watering.php /var/www
+sudo cp about.php index.html data.php index.html get-watering.php /var/www
 echo "chown www-data:www-data to /var/www"
 sudo chown -R www-data:www-data /var/www
 
