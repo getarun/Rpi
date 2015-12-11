@@ -273,7 +273,6 @@ def read_temperatures():
 # Schreibt alle Variablen fuer die anderen Funktionen
 	global rh1,rh2,rh3,t1,t2,t3,t4
 	global absdraussen,absdrinnen
-	global timestamp
   #zeit im ms seid 1/1/1970 + 2h UTC=>berlin+7200					
 	timestamp = time.time()*1000+7200	
 
@@ -281,19 +280,19 @@ def read_temperatures():
 	rh1 = round(humidity,1)
 	t1 = round(temperature,1)
 	if verbose == 1:
-		print('main: Sensor1: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t1,rh1))
+		print('read_temperatures: Sensor1: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t1,rh1))
 
 	humidity, temperature = Adafruit_DHT.read_retry(rhsensor,rh2pin)
 	rh2 = round(humidity,1)
 	t2 = round(temperature,1)
 	if verbose == 1:
-		print('main: Sensor2: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t2,rh2))
+		print('read_temperatures: Sensor2: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t2,rh2))
 
 	humidity, temperature = Adafruit_DHT.read_retry(rhsensor,rh3pin)
 	rh3 = round(humidity,1)
 	t3 = round(temperature,1)
 	if verbose == 1:
-		print('main: Sensor3: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t3,rh3))
+		print('read_temperatures: Sensor3: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t3,rh3))
 	
 	absdraussen = round(absfeucht(t2,rh2),2)						######################
 	absdrinnen = round(absfeucht(t3,rh3),2)							######################
@@ -334,8 +333,15 @@ def read_DS18B20(id):
   return temperature
 
 def init_sensors():
+	global timestamp, date
+
 	print('    Initialisiere Messpunkte (DHT22 1-3) mit Adafruit-Library...')
 	read_temperatures()
+
+	print('    Setze globale Zeitstempel ...')
+	timestamp = time.time()*1000+7200	
+	date = "'"+str(time.strftime('%Y-%m-%dT%H:%M:%S'))+"'"
+
 	print('    Alle Sensoren angesprochen, beginne mit Steuerung...')
 
 	####################################### SQL-STUFF #############################
