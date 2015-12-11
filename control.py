@@ -10,7 +10,7 @@ test_relais = 	"false"
 use_db      = 	"true"
 use_file    = 	"true"
 create_new_db = "false"
-#use_json    =	"false"
+use_json    =	"false"   ### not coded yet
 import json
 #be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
 verbose = 0
