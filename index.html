@@ -58,10 +58,10 @@ $(document).ready(function (diffselect) {
         EC = [[]];
         for(i=0;i<data.length;i++){
             PH[i]=([data[i][0],data[i][1]]);
-	    EC[i]=([data[i][0],data[i][4]]);
+	    EC[i]=([data[i][0],data[i][2]]);
         };
-        chart.series[1].setData(PH);
-        chart.series[0].setData(EC);
+        chart.series[0].setData(PH);
+        chart.series[1].setData(EC);
         new Highcharts.StockChart(options);
     });
 });
