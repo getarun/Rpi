@@ -90,10 +90,10 @@ $(document).ready(function (diffselect) {
 	],
 
         series: [{
-            name: 'T2',
-            data: [], dashtype: 'dot'
+            name: 'T3',
+            data: []
             },{
-            name: 'RH2',
+            name: 'RH3',
             data: [], axis: 1
             },{
             name: 'TMax',
@@ -108,19 +108,19 @@ $(document).ready(function (diffselect) {
     });
 
     $.getJSON('data.php', function(data) {
-        T2 = [[]];
+        T3 = [[]];
         Tmax = [[]];
         Tmin = [[]];
-        RH2 =[[]];
+        RH3 =[[]];
         for(i=0;i<data.length;i++){
-            RH2[i]=([data[i][0],data[i][5]]);
-            T2[i]=([data[i][0],data[i][2]]);
+            RH3[i]=([data[i][0],data[i][6]]);
+            T3[i]=([data[i][0],data[i][3]]);
             Tmax[i]=([data[i][0],data[i][7]]);
             Tmin[i]=([data[i][0],data[i][8]]);
 	    
         };
-        chart2.series[0].setData(T2);
-        chart2.series[1].setData(RH2);
+        chart2.series[0].setData(T3);
+        chart2.series[1].setData(RH3);
         chart2.series[2].setData(Tmax);
         chart2.series[3].setData(Tmin);
         new Highcharts.StockChart(options);
@@ -169,10 +169,9 @@ $(document).ready(function (diffselect) {
         absAux = [[]];
         absSchrank = [[]];
         absCal = [[]];
-        T3 = [[]];
         for(i=0;i<data.length;i++){
-            T4[i]=([data[i][0],data[i][1]]);
-            T3[i]=([data[i][0],data[i][3]]);
+            T4[i]=([data[i][0],data[i][11]]);
+     	    T2[i]=([data[i][0],data[i][2]]);	
             absCal[i]=([data[i][0],data[1][9]/data[i][10]]);
             absAux[i]=([data[i][0],data[i][9]]);		/*absdraussen*/
             absSchrank[i]=([data[i][0],data[i][10]]);		/*absdrinnen */
