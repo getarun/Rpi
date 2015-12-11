@@ -4,17 +4,15 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
-<title>v1.1-dev</title>
+<title>v2.1-dev</title>
 </head>
 <!-- /* this is used to input the amount of water given, its PH and EC values*/ -->
 <!-- // /* saves it in db of type   |timestamp|plantnumber|amount|PH|EC|*/ -->
 <body>
 	
 <center> <b>Enter your amount of watering: </b> </center>
-plantnumber &#8198; &#8198;  &#8198;    amuount &#8198; &#8198;  &#8198; &#8198;  PH &#8198; &#8198;  &#8198; &#8198; EC <\n>
+ PH &#8198; &#8198;  &#8198; &#8198; EC <\n>
 <form action="get-watering.php" method="post" accept-charset="UTF-8">
-	<input type="number" name="plantnumber" value="Pflanze #"/ min="1" max="15">
-	<input type="number" name="amount" value="Gießmenge"/>
 	<input type="number" name="PH" value="PH" step="0.1"/>
 	<input type="number" name="EC" value="EC" step="0.1"/>
 	<input type="submit"/>

@@ -1,11 +1,10 @@
 <?php
-$plantnumber 	= $_POST["plantnumber"];
-$amount      	= $_POST["amount"];
 $PH		= $_POST["PH"];
 $EC		= $_POST["EC"];
+
+plantnumber 	= 1;
+amount      	= 5;
 /*
-$plantnumber 	= 1;
-$amount      	= 500;
 $PH		= 5.8;
 $EC		= 1.2;
 */
