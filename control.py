@@ -91,7 +91,7 @@ GPIO.setup(rh3pin, GPIO.IN)
  
 # Setzt die Sollwerte
 # Temperaturmessung
-tmax = 25
+tmax = 30
 tmin = 15
 rhsoll = 50				# RH in percent to maintain
 
@@ -263,7 +263,7 @@ def status_to_console():
 	print('Intake-level: {}'.format(intakestate))
 	if verbose == 1:
 		print ''
-		print ('Datenbanktimestamp: {} ist {}'.format(timestamp,datetime.datetime.fromtimestamp(timestamp/1000.0)))
+		print ('Datenbanktimestamp: {} ist  {}'.format(timestamp,datetime.datetime.fromtimestamp(timestamp/1000.0)))
 		print('now.isoformat():                         {}'.format(now.isoformat()))
 		print '######################### End of Cycle #########################'
 	print ''
