@@ -8,7 +8,7 @@ version     = 	"update to rpi 4.1.1"
 test_light  = 	"false"
 test_relais = 	"false"
 use_db      = 	"true"
-use_file    = 	"true"
+use_file    = 	"false"
 create_new_db = "false"
 use_json    =	"false"   ### not coded yet
 import json
