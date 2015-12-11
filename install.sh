@@ -18,9 +18,11 @@ chmod +x *.sh
 ./install-adafruit-dht22.sh                                 #adafruit dht22 libraries
 
 cd /home/pi/git-working-dir/RPi
-sudo cp data.php /var/www
-sudo cp create-graph.html /var/www
-sudo cp control.py /usr/bin
-sudo cp phpinfo.php /var/www
-sudo chmod +x /usr/bin/control.py
-sudo chown www-data:www-data /var/www
+# sudo cp data.php /var/www
+# sudo cp create-graph.html /var/www
+# sudo cp control.py /usr/bin                     #is in update-local-files.sh
+# sudo cp phpinfo.php /var/www
+# sudo chmod +x /usr/bin/control.py
+# sudo chown www-data:www-data /var/www
+
+sudo sh ./update-local-files.sh
