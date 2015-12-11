@@ -258,7 +258,7 @@ def status_to_console():
 	print'RH3/T3:: {} ::   {}% | {}*C'.format(name3,rh3,t3)
 	print'DS18B :: {} ::   {}*C'.format(name4,t4)
 	print ''
-	print'[g/cmeter] {}/{} ::{+2d}%'.format(name2,name3,1-abscal-5)
+	print'[g/cmeter] {}/{} ::{}%'.format(name2,name3,1-abscal-5)
 	print ''
 	print('Fan-level: {}'.format(fanstate))
 	print('Intake-level: {}'.format(intakestate))
