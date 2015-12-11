@@ -377,8 +377,16 @@ def insert_into_file():
 	if verbose == "1":
 		print("Writing values {},{},{},{},{},{},{},{},{},{},{},{},{} into file".format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen,t4))
 	if use_json == "false":
-		with open("./data.list", "a") as file_list:
-			file_list.write(timestamp+"\t"+date+"\t"+t1+"\t"+t2+"\t"+t3+"\t"+rh1+"\t"+rh2+"\t"+rh3+"\t"+tmax+"\t"+tmin+"\t"+absdraussen+"\t"+absdrinnen+"\t"+t4+"\n")
+		thelist = [timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen,t4]
+		spacing = " "
+		newline = "\n"
+
+		with open("./data.list", "a") as thefile:
+			for item in thelist:
+  				print>>thefile, item
+  				print>>thefile, spacing
+  			print>>thefile, newline
+  			
 	if use_json == "true":
 		print 'JSON-insert-into-file: removed because not tested'
 		#with open("./data.json", "a") as file_json:
