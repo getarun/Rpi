@@ -66,11 +66,11 @@ lightpin = 26				# GPIO des Licht-Relais
 # auch wennGPIO.BOARD gesetzt ist, Pin zwischen 0-31 setzen (DHT22) BOARDpin 32 = BCOMpin 12
 rhsensor = Adafruit_DHT.DHT22
 #
-name1  = "  LSR         "	#absdraussen
+name1  = "        LSR    "	#absdraussen
 rh1pin = 16				# T1 |	RH1 # langer Sensor -- Entfeuchter
-name2  = " Raum         "	#absdrinnen
+name2  = "       Raum    "	#absdrinnen
 rh2pin = 20				# T2 |	RH2 # Schrank
-name3  = "  NDL         "
+name3  = "        NDL    "
 rh3pin = 21				# T3 |	RH3 # Zuluft
 name4 = "Wassertemp"
 #Pin 1-wire (GPIO5 geaenert in /boot/config.txt
