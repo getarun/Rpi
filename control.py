@@ -13,7 +13,7 @@ create_new_db = "false"
 use_json    =	"false"   ### not coded yet
 import json
 #be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
-verbose = 0
+verbose = 1
 clear_konsole_after_cycle = 1
 
 ## checks command line for options "sudo python control.py test_light test_relais will enable test options
