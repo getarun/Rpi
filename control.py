@@ -10,10 +10,10 @@ test_relais = 	"false"
 use_db      = 	"true"
 use_file    = 	"false"
 create_new_db = "false"
-use_json    =	"false"
+use_json    =	"false"   ### not coded yet
 import json
 #be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
-verbose = 0
+verbose = 1
 clear_konsole_after_cycle = 1
 
 ## checks command line for options "sudo python control.py test_light test_relais will enable test options
@@ -257,14 +257,15 @@ def status_to_console():
 	print'RH2/T2:: {} ::   {}% | {}*C'.format(name2,rh2,t2)
 	print'RH3/T3:: {} ::   {}% | {}*C'.format(name3,rh3,t3)
 	print'DS18B :: {} ::   {}*C'.format(name4,t4)
-	print'[g/cmeter] (AUX/Schrank) :: {} | {}'.format(absdraussen,absdrinnen)
+	print ''
+	print'[g/cmeter] {}/{} ::{:+.0%}'.format(name2,name3,1-abscal)
 	print ''
 	print('Fan-level: {}'.format(fanstate))
 	print('Intake-level: {}'.format(intakestate))
 	if verbose == 1:
 		print ''
-		print ('Datenbanktimestamp: {} ist  {}'.format(timestamp,datetime.datetime.fromtimestamp(timestamp/1000.0)))
-		print('now.isoformat():                         {}'.format(now.isoformat()))
+		print ('Datenbanktimestamp: {} ist {}'.format(timestamp,datetime.datetime.fromtimestamp(timestamp/1000.0)))
+
 		print '######################### End of Cycle #########################'
 	print ''
 
@@ -272,7 +273,7 @@ def status_to_console():
 def read_temperatures():
 # Schreibt alle Variablen fuer die anderen Funktionen
 	global rh1,rh2,rh3,t1,t2,t3,t4
-	global absdraussen,absdrinnen
+	global absdraussen,absdrinnen,abscal
 	global timestamp
   #zeit im ms seid 1/1/1970 + 2h UTC=>berlin+7200					
 	timestamp = time.time()*1000+7200	
@@ -281,23 +282,23 @@ def read_temperatures():
 	rh1 = round(humidity,1)
 	t1 = round(temperature,1)
 	if verbose == 1:
-		print('main: Sensor1: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t1,rh1))
+		print('read_temperatures: Sensor1: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t1,rh1))
 
 	humidity, temperature = Adafruit_DHT.read_retry(rhsensor,rh2pin)
 	rh2 = round(humidity,1)
 	t2 = round(temperature,1)
 	if verbose == 1:
-		print('main: Sensor2: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t2,rh2))
+		print('read_temperatures: Sensor2: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t2,rh2))
 
 	humidity, temperature = Adafruit_DHT.read_retry(rhsensor,rh3pin)
 	rh3 = round(humidity,1)
 	t3 = round(temperature,1)
 	if verbose == 1:
-		print('main: Sensor3: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t3,rh3))
+		print('read_temperatures: Sensor3: DHT{} -- Temp={}*C  Humidity={}%'.format(rhsensor,t3,rh3))
 	
 	absdraussen = round(absfeucht(t2,rh2),2)						######################
 	absdrinnen = round(absfeucht(t3,rh3),2)							######################
-
+	abscal = absdraussen/absdrinnen
 # Wassertemperatur mittels DS18B20 lesen
 	id="28-021502f5e1ff"
 	t4=read_DS18B20(id)
@@ -334,8 +335,15 @@ def read_DS18B20(id):
   return temperature
 
 def init_sensors():
+	global timestamp, date
+
 	print('    Initialisiere Messpunkte (DHT22 1-3) mit Adafruit-Library...')
 	read_temperatures()
+
+	print('    Setze globale Zeitstempel ...')
+	timestamp = time.time()*1000+7200	
+	date = "'"+str(time.strftime('%Y-%m-%dT%H:%M:%S'))+"'"
+
 	print('    Alle Sensoren angesprochen, beginne mit Steuerung...')
 
 	####################################### SQL-STUFF #############################
@@ -377,8 +385,16 @@ def insert_into_file():
 	if verbose == "1":
 		print("Writing values {},{},{},{},{},{},{},{},{},{},{},{},{} into file".format(timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen,t4))
 	if use_json == "false":
-		with open("./data.list", "a") as file_list:
-			file_list.write(timestamp+"\t"+date+"\t"+t1+"\t"+t2+"\t"+t3+"\t"+rh1+"\t"+rh2+"\t"+rh3+"\t"+tmax+"\t"+tmin+"\t"+absdraussen+"\t"+absdrinnen+"\n")
+		thelist = [timestamp,date,t1,t2,t3,rh1,rh2,rh3,tmax,tmin,absdraussen,absdrinnen,t4]
+		spacing = " "
+		newline = "\n"
+
+		with open("./data.list", "a") as thefile:
+			for item in thelist:
+  				print>>thefile, item
+  				print>>thefile, spacing
+  			print>>thefile, newline
+  			
 	if use_json == "true":
 		print 'JSON-insert-into-file: removed because not tested'
 		#with open("./data.json", "a") as file_json:

@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
-<title></title>
+<title>v2.1.1</title>
 </head>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -13,11 +13,9 @@
 <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
 <script type="text/javascript" src="http://www.highcharts.com/samples/data/usdeur.js"></script>
 
-<div>	
-	<div id="container" align:left></div>
-	<div id="container2" align:left ></div>
-</div>
-<div id="container3" style="height: 400px; width: 800px"></div>
+	<div id="container"></div>
+	<div id="container2"></div>
+	<div id="container3"></div>
 
 <script type="text/javascript">
 $.ajaxSetup({ scriptCharset: "utf-8" , contentType: "application/json; charset=utf-8"});
@@ -46,10 +44,10 @@ $(document).ready(function (diffselect) {
             name: 'RH1', data: []
             },{
             name: 'TMax',
-            data: [], dashtype: 'dot', axis: 1
+            data: [], dashtype: 'dashdot', axis: 1
             },{
             name: 'Tmin',
-            data: [], dashtype: 'dot', axis: 1
+            data: [], dashtype: 'dashdot', axis: 1
             }
 
 	]
@@ -117,7 +115,6 @@ $(document).ready(function (diffselect) {
             T3[i]=([data[i][0],data[i][3]]);
             Tmax[i]=([data[i][0],data[i][7]]);
             Tmin[i]=([data[i][0],data[i][8]]);
-	    
         };
         chart2.series[0].setData(T3);
         chart2.series[1].setData(RH3);
@@ -137,7 +134,7 @@ $(document).ready(function (diffselect) {
 	yAxis:[{
 	      title: {text:'Temperature'}
 	      },{
-	      title: {text:'Intake Cal'}, opposite: false
+	      title: {text:'Diff %'}, opposite: false
 	      },{
 	      title: {text: 'Water [g/m3]'}
 	      }
@@ -156,32 +153,34 @@ $(document).ready(function (diffselect) {
             name: 'abs - Schrank',
             data: [], yAxis: 2
             },{
-            name: 'Cal: Aussen/Schrank',
+            name: 'AbsCal',
             data: [], yAxis: 1
 	    }
-
 	]
-
     });
 
     $.getJSON('data.php', function(data) {
         T4 = [[]];
         absAus = [[]];
         absSchrank = [[]];
-        absCal = [[]];
+        absCal = [[]];  
         T2 = [[]];
+          absCalTemp = []; 
         for(i=0;i<data.length;i++){
             T4[i]=([data[i][0],data[i][11]]);
-     	    T2[i]=([data[i][0],data[i][2]]);	
-            absCal[i]=([data[i][0],data[1][9]/data[i][10]]);
+     	    T2[i]=([data[i][0],data[i][2]]);
+     	    
+            absCal[i]=([data[i][0],((1-(1-data[1][9] / data[i][10]))*100)]);	
+            
             absAus[i]=([data[i][0],data[i][9]]);		/*absdraussen*/
-            absSchrank[i]=([data[i][0],data[i][10]]);		/*absdrinnen */
-            };
+            absSchrank[i]=([data[i][0],data[i][10]]);
+        };
+        /*alert("Prozentwert:" + absCal[i]); */
         chart3.series[0].setData(T4);
         chart3.series[1].setData(T2);
         chart3.series[2].setData(absAus);
         chart3.series[3].setData(absSchrank);
-        chart3.series[4].setData(absCal);
+        chart3.series[4].setData(absCal);    
         new Highcharts.StockChart(options);
     });
 
