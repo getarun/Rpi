@@ -7,9 +7,9 @@ $amount      	= 5;
 /*
 $PH		= 5.8;
 $EC		= 1.2;
-
-echo "<h1>PH:" . $_POST["PH"] . ", EC:" . $_POST["EC"] . "</h1>";
 */
+echo "<h1>PH:" . $_POST["PH"] . ", EC:" . $_POST["EC"] . "</h1>";
+
 $timestamp 	= time()*1000+7200;
 
   $dbc 		= mysqli_connect("localhost", "pi", "pi", "klima_growbox");
