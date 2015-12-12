@@ -13,11 +13,9 @@
 <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
 <script type="text/javascript" src="http://www.highcharts.com/samples/data/usdeur.js"></script>
 
-<div>	
-	<div id="container" align:left></div>
-	<div id="container2" align:left ></div>
-</div>
-<div id="container3"</div>
+	<div id="container"></div>
+	<div id="container2"></div>
+	<div id="container3"></div>
 
 <script type="text/javascript">
 $.ajaxSetup({ scriptCharset: "utf-8" , contentType: "application/json; charset=utf-8"});
@@ -117,7 +115,6 @@ $(document).ready(function (diffselect) {
             T3[i]=([data[i][0],data[i][3]]);
             Tmax[i]=([data[i][0],data[i][7]]);
             Tmin[i]=([data[i][0],data[i][8]]);
-	    
         };
         chart2.series[0].setData(T3);
         chart2.series[1].setData(RH3);
@@ -137,7 +134,7 @@ $(document).ready(function (diffselect) {
 	yAxis:[{
 	      title: {text:'Temperature'}
 	      },{
-	      title: {text:'Intake Cal'}, opposite: false
+	      title: {text:'Diff %'}, opposite: false
 	      },{
 	      title: {text: 'Water [g/m3]'}
 	      }
@@ -159,9 +156,7 @@ $(document).ready(function (diffselect) {
             name: 'Cal: Aussen/Schrank',
             data: [], yAxis: 1
 	    }
-
 	]
-
     });
 
     $.getJSON('data.php', function(data) {
@@ -182,8 +177,8 @@ $(document).ready(function (diffselect) {
             
             absCalTemp[i]=(1 - data[i][9]/data[i][10] ) *100;        /* Berechnung eines relativen Prozentwertes*/
             alert("Prozentwert:" + str(absCalTemp[i]));
-            absCal[i]=([data[i][0],absCalTemp[i]]);
-            };
+            absCal[i]=([data[i][0],absCalTemp[i]]);		/* 
+        };
         chart3.series[0].setData(T4);
         chart3.series[1].setData(T2);
         chart3.series[2].setData(absAus);
