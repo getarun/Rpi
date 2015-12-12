@@ -51,8 +51,6 @@ $(document).ready(function (diffselect) {
             name: 'PH', data: [], axis: 1
             },{
             name: 'EC', data: []
-            },{
-            name: 'absschrank', data: []
             }
 	]
     });
@@ -67,14 +65,6 @@ $(document).ready(function (diffselect) {
         chart.series[1].setData(EC);
     });
     
-    $.getJSON('data.php', function(data) {
-        absschrank = [[]];
-        for(i=0;i<data.length;i++){
-            absschrank[i]=([data[i][0],data[i][9]]);
-        };
-        chart.series[2].setData(absschrank);
-        new Highcharts.StockChart(options);
-    });
     /*
 ###################################################################################################################
 */
@@ -88,6 +78,8 @@ $(document).ready(function (diffselect) {
 	      title: {text:'Temperature'}
 	      },{
 	      title: {text: 'Humidity'}, opposite: false
+	      },{
+	      title: {text: 'abscal'}, opposite: false
 	      }
 	],
         series: [{
@@ -102,6 +94,9 @@ $(document).ready(function (diffselect) {
             },{
             name: 'Tmin',
             data: [], dashtype: 'dot'
+            },{
+            name: 'g/ccm',
+            data: [], dashtype: 'dot', axis: 2
             }
 	]
     });
@@ -110,17 +105,19 @@ $(document).ready(function (diffselect) {
         Tmax = [[]];
         Tmin = [[]];
         RH3 =[[]];
+        abscal = [[]]
         for(i=0;i<data.length;i++){
             RH3[i]=([data[i][0],data[i][6]]);
             T3[i]=([data[i][0],data[i][3]]);
             Tmax[i]=([data[i][0],data[i][7]]);
             Tmin[i]=([data[i][0],data[i][8]]);
-	    
+	    abscal[i]=([data[i][0],(1-(1- data[i][9]/data[i][10]*100))]);
         };
         chart2.series[0].setData(T3);
         chart2.series[1].setData(RH3);
         chart2.series[2].setData(Tmax);
         chart2.series[3].setData(Tmin);
+        chart2.series[4].setData(abscal);
         new Highcharts.StockChart(options);
     });
 /*
