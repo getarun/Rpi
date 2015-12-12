@@ -181,7 +181,7 @@ $(document).ready(function (diffselect) {
             absSchrank[i]=([data[i][0],data[i][10]]);
             
             absCalTemp[i]=(1 - data[i][9]/data[i][10] ) *100;        /* Berechnung eines relativen Prozentwertes*/
-            console.log("Prozentwert:" + str(absCalTemp[i]));
+            alert("Prozentwert:" + str(absCalTemp[i]));
             absCal[i]=([data[i][0],absCalTemp[i]]);
             };
         chart3.series[0].setData(T4);
