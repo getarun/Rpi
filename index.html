@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
-<title>v2.1.1-dev</title>
+<title>v2.1.1-index.html-dev</title>
 </head>
 <!-- /* this is used to input the amount of water given, its PH and EC values*/ -->
 <!-- // /* saves it in db of type   |timestamp|plantnumber|amount|PH|EC|*/ -->
@@ -79,7 +79,7 @@ $(document).ready(function (diffselect) {
 	      },{
 	      title: {text: 'Humidity'}, opposite: true
 	      },{
-	      title: {text: 'abscal'}, opposite: false, min: -5, max: 5
+	      title: {text: 'abscal'}, opposite: false
 	      }
 	],
         series: [{
@@ -105,19 +105,19 @@ $(document).ready(function (diffselect) {
         Tmax = [[]];
         Tmin = [[]];
         RH3 =[[]];
-        absCal = [[]]
+        gcm = [[]]
         for(i=0;i<data.length;i++){
             RH3[i]=([data[i][0],data[i][6]]);
             T3[i]=([data[i][0],data[i][3]]);
             Tmax[i]=([data[i][0],data[i][7]]);
             Tmin[i]=([data[i][0],data[i][8]]);
-            absCal[i]=([data[i][0],((1-(1-data[1][9] / data[i][10]))*100)]);	
+            gcm[i]=([data[i][0],data[1][9]]);	
         };
         chart2.series[0].setData(T3);
         chart2.series[1].setData(RH3);
         chart2.series[2].setData(Tmax);
         chart2.series[3].setData(Tmin);
-        chart2.series[4].setData(absCal);
+        chart2.series[4].setData(gcm);
         new Highcharts.StockChart(options);
     });
 /*
