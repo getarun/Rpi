@@ -105,7 +105,7 @@ $(document).ready(function (diffselect) {
         Tmax = [[]];
         Tmin = [[]];
         RH3 =[[]];
-        abscal = [[]]
+        absCal = [[]]
         for(i=0;i<data.length;i++){
             RH3[i]=([data[i][0],data[i][6]]);
             T3[i]=([data[i][0],data[i][3]]);
@@ -117,7 +117,7 @@ $(document).ready(function (diffselect) {
         chart2.series[1].setData(RH3);
         chart2.series[2].setData(Tmax);
         chart2.series[3].setData(Tmin);
-        chart2.series[4].setData(abscal);
+        chart2.series[4].setData(absCal);
         new Highcharts.StockChart(options);
     });
 /*
