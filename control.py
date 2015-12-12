@@ -274,6 +274,7 @@ def read_temperatures():
 # Schreibt alle Variablen fuer die anderen Funktionen
 	global rh1,rh2,rh3,t1,t2,t3,t4
 	global absdraussen,absdrinnen,abscal
+	global timestamp
   #zeit im ms seid 1/1/1970 + 2h UTC=>berlin+7200					
 	timestamp = time.time()*1000+7200	
 
