@@ -16,7 +16,8 @@ $timestamp 	= time()*1000+7200;
   $query 	= "INSERT INTO klima_growbox.giessen (timestamp,plantnumber,amount,PH,EC) VALUES ($timestamp, $plantnumber, $amount, $PH, $EC)";
   $execute	= mysqli_query($bdc, $query);
   if (mysqli_query($dbc, $query)){
-	echo "<script type="text/javascript">alert("PH: ".$PH." EC: " .$EC. "in Datenbank gespeichert (" .$timestamp. ")");</script>";
+	/*echo "<script type="text/javascript">alert("PH: ". $PH ." EC: " . $EC . "in Datenbank gespeichert (" . $timestamp . ")");</script>";
+        */
   }
   mysqli_close($dbc);
 ?>
