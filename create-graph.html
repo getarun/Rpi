@@ -170,7 +170,7 @@ $(document).ready(function (diffselect) {
             T4[i]=([data[i][0],data[i][11]]);
      	    T2[i]=([data[i][0],data[i][2]]);
      	    
-            absCal[i]=([data[i][0],1-(((1-data[1][9] / data[i][10]))*100)]);	
+            absCal[i]=([data[i][0],((1-(1-data[1][9] / data[i][10]))*100)]);	
             
             absAus[i]=([data[i][0],data[i][9]]);		/*absdraussen*/
             absSchrank[i]=([data[i][0],data[i][10]]);
