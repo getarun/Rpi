@@ -265,7 +265,7 @@ def status_to_console():
 	if verbose == 1:
 		print ''
 		print ('Datenbanktimestamp: {} ist {}'.format(timestamp,datetime.datetime.fromtimestamp(timestamp/1000.0)))
-		print('now.isoformat():                          {}'.format(now.isoformat()))
+		# print('now.isoformat():                          {}'.format(now.isoformat()))
 		print '######################### End of Cycle #########################'
 	print ''
 
