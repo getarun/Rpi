@@ -175,7 +175,7 @@ $(document).ready(function (diffselect) {
             absAus[i]=([data[i][0],data[i][9]]);		/*absdraussen*/
             absSchrank[i]=([data[i][0],data[i][10]]);
             
-            absCalTemp[i]=(1 - data[i][9]/data[i][10] ) *100;        /* Berechnung eines relativen Prozentwertes*/
+            absCalTemp[i]=data[i][10];        /* Berechnung eines relativen Prozentwertes*/
             alert("Prozentwert:" + str(absCalTemp[i]));
             absCal[i]=([data[i][0],absCalTemp[i]]);		/* */
         };
