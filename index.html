@@ -63,9 +63,16 @@ $(document).ready(function (diffselect) {
         };
         chart.series[0].setData(PH);
         chart.series[1].setData(EC);
-        new Highcharts.StockChart(options);
     });
     
+    $.getJSON('data.php', function(data) {
+        absschrank = [[]];
+        for(i=0;i<data.length;i++){
+            absschrank[i]=([data[i][0],data[i][9]]);
+        };
+        chart.series[2].setData(absschrank);
+        new Highcharts.StockChart(options);
+    });
     /*
 ###################################################################################################################
 */
