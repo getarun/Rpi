@@ -111,7 +111,7 @@ $(document).ready(function (diffselect) {
             T3[i]=([data[i][0],data[i][3]]);
             Tmax[i]=([data[i][0],data[i][7]]);
             Tmin[i]=([data[i][0],data[i][8]]);
-	    abscal[i]=([data[i][0],(1-(1- data[i][9]/data[i][10]*100))]);
+            absCal[i]=([data[i][0],((1-(1-data[1][9] / data[i][10]))*100)]);	
         };
         chart2.series[0].setData(T3);
         chart2.series[1].setData(RH3);
