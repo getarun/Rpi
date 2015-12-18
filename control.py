@@ -9,7 +9,7 @@ test_light  = 	"false"
 test_relais = 	"false"
 use_db      = 	"true"
 use_file    = 	"false"
-create_new_db = "false"
+create_new_db = "true"
 use_json    =	"false"   ### not coded yet
 import json
 #be verbose! detailliertere fehlermeldungen, 0=normal -- 1=detalliert
