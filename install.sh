@@ -1,10 +1,10 @@
 #!/bin/bash
-sudo apt-get install mysql-server build-essential python-dev php5-mysql
+sudo apt-get install mysql-server build-essential python-dev php-mysql
 #mysql -u root -h localhost -p
 #CREATE USER pi@localhost IDENTIFIED BY pi;
 
 ###### HTML-Graph darstellung ######
- sudo apt-get install lighttpd php5-cgi
+ sudo apt-get install lighttpd php-cgi
  sudo lighttpd-enable-mod fastcgi fastcgi-php userdir      #   enable user dir ~/* to accept requests like 
  sudo service lighttpd force-reload                            #    http://xx.xx.xx.xx/~pi/*
 ####################################
