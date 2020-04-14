@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo apt-get install mysql-server build-essential python-dev php-mysql python-setuptools
+sudo apt-get install mariadb-server build-essential python-dev php-mysql python-setuptools
 #mysql -u root -h localhost -p
 #CREATE USER pi@localhost IDENTIFIED BY pi;
 
